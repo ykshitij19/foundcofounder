@@ -294,6 +294,77 @@ tr.arc-row td:first-child{color:var(--red);font-weight:600}
 /* ── FOOTER ── */
 footer{padding:22px 20px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--t3);font-family:var(--fm);flex-wrap:wrap;gap:8px}
 
+/* ── PORTFOLIO PIPELINE ── */
+.pipe-intro{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;align-items:start;margin-top:2.5rem;margin-bottom:3rem}
+.pipe-arch{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:26px}
+.pipe-arch-label{font-family:var(--fm);font-size:10px;letter-spacing:3px;color:var(--t3);text-transform:uppercase;margin-bottom:14px}
+.pipe-arch-row{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-bottom:1px solid var(--border)}
+.pipe-arch-row:last-child{border-bottom:none}
+.par-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;margin-top:2px}
+.par-icon.code{background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.18)}
+.par-icon.cfg{background:var(--red-a12);border:1px solid var(--red-a30)}
+.par-icon.out{background:var(--green-a10);border:1px solid rgba(34,197,94,.2)}
+.par-t{font-size:13px;font-weight:500;color:var(--white);margin-bottom:3px}
+.par-s{font-size:12px;color:var(--t2);line-height:1.55}
+.pipe-key-point{background:var(--bg3);border:1px solid var(--border);border-left:2px solid var(--red);border-radius:0 8px 8px 0;padding:13px 16px;font-size:14px;color:var(--white);margin-top:16px;line-height:1.6}
+.pipe-key-point span{color:var(--red)}
+
+.pipe-tiers{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;margin-bottom:2rem}
+.pt{border-radius:14px;overflow:hidden;border:1px solid var(--border)}
+.pt.free{background:var(--card)}
+.pt.paid{background:var(--card);border-color:rgba(232,69,90,.25)}
+.pt-head{padding:18px 22px;border-bottom:1px solid var(--border)}
+.pt-badge{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:20px;font-size:10px;font-family:var(--fm);margin-bottom:10px}
+.pt-badge.fr{background:rgba(255,255,255,.05);color:var(--t2);border:1px solid var(--border)}
+.pt-badge.pd{background:var(--red-a12);color:var(--red);border:1px solid var(--red-a30)}
+.pt-title{font-family:var(--fd);font-size:26px;color:var(--white);letter-spacing:1px;margin-bottom:4px}
+.pt-time{font-family:var(--fd);font-size:36px;line-height:1;margin-bottom:4px}
+.pt.free .pt-time{color:#60a5fa}
+.pt.paid .pt-time{color:var(--red)}
+.pt-time-note{font-size:12px;color:var(--t3);margin-bottom:0}
+.pt-body{padding:14px 0}
+.pt-row{display:flex;align-items:flex-start;gap:10px;padding:10px 22px;border-bottom:1px solid var(--border)}
+.pt-row:last-child{border-bottom:none}
+.pt-row-icon{font-size:13px;flex-shrink:0;margin-top:1px}
+.pt-row-t{font-size:13px;font-weight:500;color:var(--white);margin-bottom:2px}
+.pt-row-s{font-size:12px;color:var(--t2);line-height:1.5}
+.pt-footer{padding:14px 22px;background:var(--bg3);border-top:1px solid var(--border);font-size:12px;color:var(--t2);line-height:1.6}
+.pt.paid .pt-footer{background:rgba(232,69,90,.05);border-top-color:rgba(232,69,90,.15)}
+
+.pipe-deliverables{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:2rem}
+.pd-head{padding:16px 22px;background:var(--bg3);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.pd-head-t{font-family:var(--fd);font-size:18px;color:var(--white);letter-spacing:1px}
+.pd-head-s{font-size:12px;color:var(--t3);font-family:var(--fm)}
+.pd-grid{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--border)}
+.pd-cell{padding:16px 18px;border-right:1px solid var(--border)}
+.pd-cell:last-child{border-right:none}
+.pd-cell-l{font-family:var(--fm);font-size:10px;color:var(--t3);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.pd-cell-v{font-size:14px;color:var(--white);font-weight:500;margin-bottom:3px}
+.pd-cell-s{font-size:11px;color:var(--t3);line-height:1.5}
+.pd-infra{display:grid;grid-template-columns:repeat(3,1fr)}
+.pdi{padding:16px 18px;border-right:1px solid var(--border)}
+.pdi:last-child{border-right:none}
+.pdi-icon{font-size:18px;margin-bottom:8px}
+.pdi-t{font-size:13px;font-weight:500;color:var(--white);margin-bottom:3px}
+.pdi-s{font-size:11px;color:var(--t3);line-height:1.55}
+
+.pipe-consent{background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.18);border-radius:12px;padding:22px 26px;margin-bottom:1.4rem}
+.pc-title{font-family:var(--fd);font-size:18px;color:#93c5fd;letter-spacing:1px;margin-bottom:14px}
+.pc-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.pc-col-label{font-family:var(--fm);font-size:10px;color:var(--t3);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px}
+.pc-item{font-size:13px;color:var(--t2);padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05);display:flex;gap:8px}
+.pc-item:last-child{border-bottom:none}
+
+.pipe-timeline{display:flex;gap:0;background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.ptl{flex:1;padding:18px 16px;border-right:1px solid var(--border);text-align:center}
+.ptl:last-child{border-right:none}
+.ptl-n{font-family:var(--fd);font-size:36px;line-height:1;margin-bottom:4px}
+.ptl-l{font-size:12px;font-weight:500;color:var(--white);margin-bottom:3px}
+.ptl-s{font-size:11px;color:var(--t3)}
+.ptl.t-blue .ptl-n{color:#60a5fa}
+.ptl.t-red .ptl-n{color:var(--red)}
+.ptl.t-green .ptl-n{color:var(--green)}
+
 /* ── RESPONSIVE ── */
 @media(max-width:860px){
   .hero-inner{grid-template-columns:1fr}
@@ -310,6 +381,11 @@ footer{padding:22px 20px;border-top:1px solid var(--border);display:flex;justify
   .la{transform:rotate(90deg)}
   .nav-links{display:none}
   .hamburger{display:flex}
+  .pipe-intro,.pipe-tiers,.pc-grid{grid-template-columns:1fr}
+  .pd-grid,.pd-infra{grid-template-columns:1fr 1fr}
+  .pipe-timeline{flex-direction:column}
+  .ptl{border-right:none;border-bottom:1px solid var(--border)}
+  .ptl:last-child{border-bottom:none}
 }
 @media(max-width:480px){
   .flow-grid,.flow-grid-b{grid-template-columns:1fr}
@@ -332,6 +408,7 @@ footer{padding:22px 20px;border-top:1px solid var(--border);display:flex;justify
     <li><a href="#solution">Solution</a></li>
     <li><a href="#howitworks">How It Works</a></li>
     <li><a href="#tech">Tech</a></li>
+    <li><a href="#portfolio">Portfolio Pipeline</a></li>
     <li><a href="#competitors">Market</a></li>
     <li><a href="#business">Business</a></li>
     <li><a href="#cta" class="nav-cta">Let's Build →</a></li>
@@ -346,6 +423,7 @@ footer{padding:22px 20px;border-top:1px solid var(--border);display:flex;justify
   <a href="#solution" onclick="closeMenu()">The Solution</a>
   <a href="#howitworks" onclick="closeMenu()">How It Works</a>
   <a href="#tech" onclick="closeMenu()">Tech Architecture</a>
+  <a href="#portfolio" onclick="closeMenu()">Portfolio Pipeline</a>
   <a href="#competitors" onclick="closeMenu()">Market & Competition</a>
   <a href="#business" onclick="closeMenu()">Business Model</a>
   <a href="#cta" onclick="closeMenu()" class="nav-cta">Let's Build →</a>
@@ -764,6 +842,264 @@ footer{padding:22px 20px;border-top:1px solid var(--border);display:flex;justify
       <div class="ss"><div class="ss-n">₹999</div><div class="ss-l">max actor subscription</div></div>
       <div class="ss"><div class="ss-n">0</div><div class="ss-l">direct competitors solving this</div></div>
     </div>
+  </div>
+</section>
+
+<!-- ═══ PORTFOLIO PIPELINE ═══ -->
+<section id="portfolio" class="alt">
+  <div class="container">
+    <div class="label fu">Portfolio Building Pipeline</div>
+    <h2 class="h2 fu d1">One master template. <em>Infinite profiles.</em></h2>
+    <p class="sub fu d2">The architecture is already built. Deploying a new actor profile is a config file change — not a build from scratch. Every profile is live in under 30 minutes, hosted for free.</p>
+
+    <!-- Architecture overview -->
+    <div class="pipe-intro">
+      <div class="fu d2">
+        <div class="pipe-arch">
+          <div class="pipe-arch-label">How the template engine works</div>
+          <div class="pipe-arch-row">
+            <div class="par-icon code">🏗️</div>
+            <div>
+              <div class="par-t">Master Architecture (Fixed — Never changes)</div>
+              <div class="par-s">Full website codebase — layout, components, routing, hosting pipeline, GitHub Actions CI/CD. Built once, reused for every single actor. Zero rebuild per profile.</div>
+            </div>
+          </div>
+          <div class="pipe-arch-row">
+            <div class="par-icon cfg">⚙️</div>
+            <div>
+              <div class="par-t">Config File (Changes per actor)</div>
+              <div class="par-s">Name, photos, videos, bio, skills, social links, colors, fonts, layout variant. One JSON/YAML file per actor. Fill it in → push to GitHub → site is live.</div>
+            </div>
+          </div>
+          <div class="pipe-arch-row">
+            <div class="par-icon out">🚀</div>
+            <div>
+              <div class="par-t">Auto-Deployment Pipeline</div>
+              <div class="par-s">GitHub push triggers Vercel deploy. Profile is live on a Vercel subdomain within minutes. No manual hosting steps. No server management.</div>
+            </div>
+          </div>
+          <div class="pipe-key-point">Casting agencies need <span>uniformity</span> — all free profiles look the same template. That's a feature, not a limitation. Agencies can preview actors consistently.</div>
+        </div>
+      </div>
+      <div class="fu d3">
+        <!-- Quick timeline summary -->
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:1.2rem">
+          <div style="padding:14px 20px;background:var(--bg3);border-bottom:1px solid var(--border)">
+            <div style="font-family:var(--fm);font-size:10px;color:var(--t3);letter-spacing:2px;text-transform:uppercase">End-to-End Time</div>
+          </div>
+          <div class="pipe-timeline">
+            <div class="ptl t-blue">
+              <div class="ptl-n">15 min</div>
+              <div class="ptl-l">Free Profile</div>
+              <div class="ptl-s">Template website live on Vercel</div>
+            </div>
+            <div class="ptl t-red">
+              <div class="ptl-n">30 min</div>
+              <div class="ptl-l">Paid Profile</div>
+              <div class="ptl-s">Branded site + template for agency</div>
+            </div>
+            <div class="ptl t-green">
+              <div class="ptl-n">₹0</div>
+              <div class="ptl-l">Hosting Cost</div>
+              <div class="ptl-s">GitHub + Vercel free tier</div>
+            </div>
+          </div>
+        </div>
+        <!-- What "config change" means -->
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px">
+          <div style="font-family:var(--fm);font-size:10px;color:var(--t3);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px">Config file fields</div>
+          <div style="display:flex;flex-wrap:wrap;gap:7px">
+            <span class="tag tag-d">actor_name</span>
+            <span class="tag tag-d">age</span>
+            <span class="tag tag-d">height</span>
+            <span class="tag tag-d">skills[]</span>
+            <span class="tag tag-d">photos[]</span>
+            <span class="tag tag-d">videos[]</span>
+            <span class="tag tag-d">bio</span>
+            <span class="tag tag-r">primary_color</span>
+            <span class="tag tag-r">font_family</span>
+            <span class="tag tag-r">layout_variant</span>
+            <span class="tag tag-b">social_links{}</span>
+            <span class="tag tag-b">contact_email</span>
+            <span class="tag tag-g">domain (optional)</span>
+          </div>
+          <div style="margin-top:14px;font-size:12px;color:var(--t3);line-height:1.6">Red fields change for paid tier (branding). Blue/green fields are optional extras. Everything else stays identical across all profiles.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Two tiers side by side -->
+    <div class="pipe-tiers">
+
+      <!-- FREE TIER -->
+      <div class="pt free fu d1">
+        <div class="pt-head">
+          <div class="pt-badge fr">○ Free Tier</div>
+          <div class="pt-title">Template Website</div>
+          <div class="pt-time">15 min</div>
+          <div class="pt-time-note">from data received → profile live on Vercel</div>
+        </div>
+        <div class="pt-body">
+          <div class="pt-row">
+            <div class="pt-row-icon" style="color:#60a5fa">📋</div>
+            <div>
+              <div class="pt-row-t">One standard template for all actors</div>
+              <div class="pt-row-s">Consistent look across all free profiles. Casting agencies can preview any actor in a familiar layout — no cognitive load switching between styles.</div>
+            </div>
+          </div>
+          <div class="pt-row">
+            <div class="pt-row-icon" style="color:#60a5fa">⚙️</div>
+            <div>
+              <div class="pt-row-t">Config file filled → GitHub push → live</div>
+              <div class="pt-row-s">Actor data extracted by ARC, config auto-populated, pushed to a new GitHub repo under ARC's org, Vercel auto-deploys.</div>
+            </div>
+          </div>
+          <div class="pt-row">
+            <div class="pt-row-icon" style="color:#60a5fa">🌐</div>
+            <div>
+              <div class="pt-row-t">Hosted on Vercel subdomain</div>
+              <div class="pt-row-s">URL format: <span style="font-family:var(--fm);font-size:11px;color:#93c5fd">actorname.vercel.app</span> or similar. Free hosting, no domain cost.</div>
+            </div>
+          </div>
+          <div class="pt-row">
+            <div class="pt-row-icon" style="color:#60a5fa">🎭</div>
+            <div>
+              <div class="pt-row-t">Used primarily by casting agencies</div>
+              <div class="pt-row-s">This profile is the casting tool. Agency searches ARC → clicks profile → sees structured page. Actor doesn't use this themselves.</div>
+            </div>
+          </div>
+          <div class="pt-row">
+            <div class="pt-row-icon" style="color:var(--t3)">🔒</div>
+            <div>
+              <div class="pt-row-t">Actor gets NO credentials</div>
+              <div class="pt-row-s">Profile exists in ARC's GitHub org. Actor cannot log in, cannot edit. Only ARC team has access. Actor's new Gmail account used for Vercel — with consent.</div>
+            </div>
+          </div>
+        </div>
+        <div class="pt-footer">
+          <strong style="color:var(--t1)">Cost to actor: ₹0</strong> &nbsp;·&nbsp; Hosting: GitHub + Vercel free tier &nbsp;·&nbsp; No domain purchase needed
+        </div>
+      </div>
+
+      <!-- PAID TIER -->
+      <div class="pt paid fu d2">
+        <div class="pt-head">
+          <div class="pt-badge pd">● Paid Tier</div>
+          <div class="pt-title">Branded Website</div>
+          <div class="pt-time">30 min</div>
+          <div class="pt-time-note">branded site + template site, both live on Vercel</div>
+        </div>
+        <div class="pt-body">
+          <div class="pt-row">
+            <div class="pt-row-icon" style="color:var(--red)">🎨</div>
+            <div>
+              <div class="pt-row-t">Branded website delivered to actor</div>
+              <div class="pt-row-s">Custom fonts, colors, and layout variant — chosen to reflect how the actor wants to present themselves. Same architecture underneath, different skin on top.</div>
+            </div>
+          </div>
+          <div class="pt-row">
+            <div class="pt-row-icon" style="color:var(--red)">📋</div>
+            <div>
+              <div class="pt-row-t">Template website ALSO created (for agency)</div>
+              <div class="pt-row-s">In addition to the branded site, a standard template profile is still created for casting agencies. Paid actors appear in both: their personal brand + the agency-facing uniform view.</div>
+            </div>
+          </div>
+          <div class="pt-row">
+            <div class="pt-row-icon" style="color:var(--red)">🔑</div>
+            <div>
+              <div class="pt-row-t">Actor gets full credentials</div>
+              <div class="pt-row-s">GitHub repo access + Vercel login credentials handed over. Actor owns their site. A new Gmail is created for them (with consent) and credentials are shared.</div>
+            </div>
+          </div>
+          <div class="pt-row">
+            <div class="pt-row-icon" style="color:var(--red)">🌐</div>
+            <div>
+              <div class="pt-row-t">Custom domain available (paid add-on)</div>
+              <div class="pt-row-s">Default hosting is Vercel subdomain — free. If actor wants <span style="font-family:var(--fm);font-size:11px;color:#fca5a5">actorname.com</span>, they pay for the domain separately. ARC configures it.</div>
+            </div>
+          </div>
+          <div class="pt-row">
+            <div class="pt-row-icon" style="color:var(--green)">🔄</div>
+            <div>
+              <div class="pt-row-t">Free updates &amp; changes for 1 year</div>
+              <div class="pt-row-s">New photos, updated bio, reel changes, skill additions — all covered for 12 months after delivery at no extra charge. After year 1, updates can be paid or self-managed.</div>
+            </div>
+          </div>
+        </div>
+        <div class="pt-footer" style="background:rgba(232,69,90,.05);border-top-color:rgba(232,69,90,.15)">
+          <strong style="color:var(--white)">Cost: ₹500–999/mo</strong> &nbsp;·&nbsp; Branded site + agency template + credentials + 1yr free updates &nbsp;·&nbsp; Domain extra if needed
+        </div>
+      </div>
+    </div>
+
+    <!-- Deliverables breakdown -->
+    <div class="pipe-deliverables fu d3">
+      <div class="pd-head">
+        <div class="pd-head-t">What gets delivered per profile</div>
+        <div class="pd-head-s">COMPLETE OUTPUT SPEC</div>
+      </div>
+      <div class="pd-grid">
+        <div class="pd-cell">
+          <div class="pd-cell-l">For Agency (Both Tiers)</div>
+          <div class="pd-cell-v">Template Profile</div>
+          <div class="pd-cell-s">Uniform layout, all media, structured data. Used for ARC search and casting decks.</div>
+        </div>
+        <div class="pd-cell">
+          <div class="pd-cell-l">For Actor (Paid Only)</div>
+          <div class="pd-cell-v">Branded Portfolio</div>
+          <div class="pd-cell-s">Custom fonts + colors + layout variant. Actor's personal online presence.</div>
+        </div>
+        <div class="pd-cell">
+          <div class="pd-cell-l">Credentials</div>
+          <div class="pd-cell-v">Free: None &nbsp;·&nbsp; Paid: Full access</div>
+          <div class="pd-cell-s">Free actors don't get login. Paid actors get GitHub + Vercel credentials via their new Gmail.</div>
+        </div>
+        <div class="pd-cell">
+          <div class="pd-cell-l">Hosting Cost</div>
+          <div class="pd-cell-v">₹0 (GitHub + Vercel)</div>
+          <div class="pd-cell-s">Free tier of both platforms covers all needs unless actor specifically wants a paid custom domain.</div>
+        </div>
+      </div>
+      <div class="pd-infra">
+        <div class="pdi">
+          <div class="pdi-icon">⚡</div>
+          <div class="pdi-t">GitHub (Code + Version Control)</div>
+          <div class="pdi-s">Each actor gets their own repo under ARC's org. Actor's new Gmail is used as the GitHub account. Config file lives here. Free tier is sufficient indefinitely.</div>
+        </div>
+        <div class="pdi">
+          <div class="pdi-icon">🚀</div>
+          <div class="pdi-t">Vercel (Hosting + Deployment)</div>
+          <div class="pdi-s">Connected to the GitHub repo. Every push auto-deploys. Free tier supports the site perfectly. Custom domain configured here if purchased. Fast global CDN included.</div>
+        </div>
+        <div class="pdi" style="border-right:none">
+          <div class="pdi-icon">📧</div>
+          <div class="pdi-t">New Gmail (With Consent)</div>
+          <div class="pdi-s">A fresh Gmail account is created for each actor — used only for GitHub and Vercel. Free actors: ARC keeps it. Paid actors: credentials handed over. Always done with actor's explicit consent.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Consent box -->
+    <div class="pipe-consent fu d4">
+      <div class="pc-title">Consent &amp; Data Handling</div>
+      <div class="pc-grid">
+        <div>
+          <div class="pc-col-label">What we do with consent</div>
+          <div class="pc-item"><span style="color:#93c5fd">→</span> Create a new Gmail in actor's name</div>
+          <div class="pc-item"><span style="color:#93c5fd">→</span> Use it to create GitHub + Vercel accounts</div>
+          <div class="pc-item"><span style="color:#93c5fd">→</span> Host their media publicly on the profile</div>
+          <div class="pc-item"><span style="color:#93c5fd">→</span> Include them in ARC's searchable database</div>
+        </div>
+        <div>
+          <div class="pc-col-label">Free vs Paid credential access</div>
+          <div class="pc-item"><span style="color:var(--t3)">–</span> <strong style="color:var(--t1)">Free:</strong> ARC holds all credentials. Actor cannot log in.</div>
+          <div class="pc-item"><span style="color:var(--green)">✓</span> <strong style="color:var(--t1)">Paid:</strong> Full GitHub + Vercel credentials handed to actor.</div>
+          <div class="pc-item"><span style="color:var(--green)">✓</span> <strong style="color:var(--t1)">Paid:</strong> Actor can manage their own site after handover.</div>
+          <div class="pc-item"><span style="color:var(--green)">✓</span> <strong style="color:var(--t1)">Paid:</strong> 1 year of free updates before self-management begins.</div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
 
