@@ -3,1248 +3,428 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="ARC — Casting Infrastructure Platform. Turning a 4-hour manual process into 10 minutes.">
 <title>ARC — Casting Infrastructure Platform</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#08080f;
+  --bg2:#0e0e1a;
+  --bg3:#141422;
+  --card:#111120;
+  --red:#e8455a;
+  --red-a12:rgba(232,69,90,.12);
+  --red-a30:rgba(232,69,90,.30);
+  --white:#f4f2ec;
+  --t1:#e0ddd5;
+  --t2:#9ca3af;
+  --t3:#6b7280;
+  --green:#22c55e;
+  --green-a10:rgba(34,197,94,.10);
+  --blue:#3b82f6;
+  --border:rgba(255,255,255,.07);
+  --border2:rgba(255,255,255,.12);
+  --fd:'Bebas Neue',sans-serif;
+  --fb:'DM Sans',sans-serif;
+  --fm:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--t1);font-family:var(--fb);font-size:16px;line-height:1.65;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+ul{list-style:none}
+img{max-width:100%;display:block}
 
-  :root {
-    --bg: #0A0A12;
-    --bg2: #111120;
-    --bg3: #181828;
-    --card: #14141F;
-    --red: #E8455A;
-    --red-dim: rgba(232,69,90,0.12);
-    --red-border: rgba(232,69,90,0.3);
-    --white: #F5F4F0;
-    --muted: #6B7280;
-    --muted2: #9CA3AF;
-    --green: #22C55E;
-    --green-dim: rgba(34,197,94,0.1);
-    --blue: #3B82F6;
-    --text: #E8E6DF;
-    --border: rgba(255,255,255,0.07);
-    --font-display: 'Bebas Neue', sans-serif;
-    --font-body: 'DM Sans', sans-serif;
-    --font-mono: 'DM Mono', monospace;
-  }
+/* ── UTILS ── */
+.container{max-width:1080px;margin:0 auto;padding:0 20px}
+.label{font-family:var(--fm);font-size:11px;letter-spacing:4px;color:var(--red);text-transform:uppercase;display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.label::before{content:'';width:22px;height:2px;background:var(--red);flex-shrink:0}
+.h1{font-family:var(--fd);font-size:clamp(52px,9vw,96px);line-height:.95;letter-spacing:2px;color:var(--white)}
+.h2{font-family:var(--fd);font-size:clamp(34px,5vw,56px);line-height:1;letter-spacing:1px;color:var(--white);margin-bottom:18px}
+.h2 em{color:var(--red);font-style:normal}
+.sub{color:var(--t2);font-size:15px;line-height:1.8;max-width:580px;margin-bottom:32px}
+.red{color:var(--red)}
+.green{color:var(--green)}
+.muted{color:var(--t2)}
+.mono{font-family:var(--fm)}
 
-  html { scroll-behavior: smooth; }
+/* ── FADE ANIMATION ── */
+.fu{opacity:0;transform:translateY(28px);transition:opacity .6s ease,transform .6s ease}
+.fu.vis{opacity:1;transform:translateY(0)}
+.d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}.d4{transition-delay:.32s}.d5{transition-delay:.40s}
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font-body);
-    font-size: 16px;
-    line-height: 1.65;
-    overflow-x: hidden;
-  }
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:54px;background:rgba(8,8,15,.88);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 20px}
+.logo{font-family:var(--fd);font-size:24px;letter-spacing:4px;color:var(--white)}.logo span{color:var(--red)}
+.nav-links{display:flex;gap:20px;align-items:center}
+.nav-links a{font-size:12px;color:var(--t2);font-weight:500;letter-spacing:.5px;transition:color .2s;padding:4px 0}
+.nav-links a:hover{color:var(--white)}
+.nav-cta{background:var(--red)!important;color:#fff!important;padding:7px 16px!important;border-radius:6px;font-weight:600!important;font-size:12px!important}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px}
+.hamburger span{display:block;width:22px;height:2px;background:var(--t1);transition:.3s}
+.mobile-menu{display:none;position:fixed;top:54px;left:0;right:0;bottom:0;background:rgba(8,8,15,.97);z-index:199;flex-direction:column;padding:32px 24px;gap:4px}
+.mobile-menu.open{display:flex}
+.mobile-menu a{font-size:18px;color:var(--t2);padding:14px 0;border-bottom:1px solid var(--border);font-weight:500;transition:color .2s}
+.mobile-menu a:hover{color:var(--white)}
+.mobile-menu .nav-cta{margin-top:12px;background:var(--red)!important;color:#fff!important;padding:14px!important;border-radius:8px;text-align:center;border:none!important;font-size:16px!important}
 
-  /* ── NAV ── */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    background: rgba(10,10,18,0.85);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-    padding: 0 2rem;
-    height: 56px;
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  .nav-logo {
-    font-family: var(--font-display);
-    font-size: 26px;
-    color: var(--white);
-    letter-spacing: 3px;
-  }
-  .nav-logo span { color: var(--red); }
-  .nav-links {
-    display: flex; gap: 1.5rem; list-style: none;
-  }
-  .nav-links a {
-    color: var(--muted2); text-decoration: none;
-    font-size: 13px; font-weight: 500;
-    letter-spacing: 0.5px;
-    transition: color 0.2s;
-  }
-  .nav-links a:hover { color: var(--white); }
-  .nav-cta {
-    background: var(--red);
-    color: #fff !important;
-    padding: 6px 16px;
-    border-radius: 6px;
-    font-weight: 600 !important;
-  }
+/* ── HERO ── */
+#hero{min-height:100svh;display:flex;align-items:center;padding:100px 0 60px;position:relative;overflow:hidden}
+.hero-glow{position:absolute;inset:0;background:radial-gradient(ellipse 55% 55% at 65% 40%,rgba(232,69,90,.07) 0%,transparent 70%),radial-gradient(ellipse 35% 40% at 15% 75%,rgba(59,130,246,.04) 0%,transparent 60%);pointer-events:none}
+.hero-grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:56px 56px;mask-image:radial-gradient(ellipse 75% 75% at center,black,transparent);pointer-events:none}
+.hero-inner{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center}
+.hero-eyebrow{font-family:var(--fm);font-size:11px;letter-spacing:4px;color:var(--red);text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:10px}
+.hero-eyebrow::before{content:'';width:28px;height:1px;background:var(--red)}
+.hero-title{font-family:var(--fd);font-size:clamp(80px,13vw,150px);line-height:.88;letter-spacing:4px;color:var(--white);margin-bottom:22px}
+.hero-title .dot{color:var(--red)}
+.hero-desc{font-size:18px;color:var(--t2);max-width:500px;line-height:1.7;margin-bottom:36px;font-weight:300}
+.hero-desc strong{color:var(--white);font-weight:500}
+.hero-stats{display:flex;gap:2.5rem;margin-bottom:42px;flex-wrap:wrap}
+.hstat-n{font-family:var(--fd);font-size:40px;color:var(--red);line-height:1}
+.hstat-l{font-size:12px;color:var(--t3);margin-top:3px}
+.hero-btn{display:inline-flex;align-items:center;gap:10px;background:var(--red);color:#fff;padding:14px 26px;border-radius:8px;font-weight:600;font-size:15px;transition:background .2s,transform .2s}
+.hero-btn:hover{background:#c7374b;transform:translateY(-1px)}
 
-  /* ── SECTIONS ── */
-  section { padding: 100px 0; position: relative; }
-  .container { max-width: 1080px; margin: 0 auto; padding: 0 2rem; }
+/* Mock card */
+.mock-wrap{background:var(--bg3);border:1px solid var(--border2);border-radius:16px;padding:18px;box-shadow:0 40px 80px rgba(0,0,0,.55)}
+.mock-bar{display:flex;align-items:center;gap:6px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.mock-dot{width:9px;height:9px;border-radius:50%}
+.mock-bar-label{font-family:var(--fm);font-size:11px;color:var(--t3);margin-left:6px}
+.msg{padding:9px 13px;border-radius:10px;font-size:13px;margin-bottom:8px;line-height:1.5}
+.msg-in{background:var(--bg2);border:1px solid var(--border);color:var(--t2);max-width:85%}
+.msg-out{background:rgba(232,69,90,.14);border:1px solid var(--red-a30);color:var(--red);max-width:85%;margin-left:auto}
+.badge{display:inline-block;background:var(--green-a10);color:var(--green);border:1px solid rgba(34,197,94,.22);border-radius:20px;padding:2px 10px;font-size:10px;font-family:var(--fm);margin-top:5px}
 
-  .section-label {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 4px;
-    color: var(--red);
-    text-transform: uppercase;
-    margin-bottom: 12px;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .section-label::before {
-    content: '';
-    display: inline-block;
-    width: 24px; height: 2px;
-    background: var(--red);
-  }
+/* ── SECTION BASE ── */
+section{padding:90px 0}
+.alt{background:var(--bg2)}
 
-  h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: 1px; }
+/* ── WHAT IS CASTING ── */
+.what-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;margin-top:2.5rem}
+.step-list{display:flex;flex-direction:column;gap:0}
+.step-row{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--border)}
+.step-row:last-child{border-bottom:none}
+.step-n{width:30px;height:30px;border-radius:50%;background:var(--red-a12);border:1px solid var(--red-a30);display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:11px;color:var(--red);flex-shrink:0;margin-top:2px}
+.step-t strong{display:block;font-size:14px;font-weight:600;color:var(--white);margin-bottom:2px}
+.step-t span{font-size:13px;color:var(--t2)}
+.info-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:26px}
+.info-card-label{font-family:var(--fm);font-size:10px;letter-spacing:3px;color:var(--t3);text-transform:uppercase;margin-bottom:14px}
+.brief-quote{background:var(--bg3);border-left:3px solid var(--red);border-radius:0 8px 8px 0;padding:13px 16px;font-size:15px;color:var(--white);font-style:italic;margin-bottom:20px;border-top:none;border-right:none;border-bottom:none;border:none;border-left:3px solid var(--red)}
+.tags{display:flex;flex-wrap:wrap;gap:7px}
+.tag{padding:4px 11px;border-radius:20px;font-size:11px;font-family:var(--fm)}
+.tag-r{background:var(--red-a12);color:var(--red);border:1px solid var(--red-a30)}
+.tag-b{background:rgba(59,130,246,.1);color:#93c5fd;border:1px solid rgba(59,130,246,.2)}
+.tag-g{background:var(--green-a10);color:var(--green);border:1px solid rgba(34,197,94,.22)}
+.tag-d{background:rgba(255,255,255,.05);color:var(--t2);border:1px solid var(--border)}
+.time-box{margin-top:20px;padding:14px 16px;background:var(--bg3);border-radius:8px;border:1px solid var(--border)}
+.time-box .n{font-family:var(--fd);font-size:30px;color:var(--red)}
+.time-box .l{font-size:12px;color:var(--t2);margin-top:3px}
 
-  .section-title {
-    font-size: clamp(36px, 5vw, 56px);
-    color: var(--white);
-    line-height: 1.05;
-    margin-bottom: 1.5rem;
-  }
+/* ── PROBLEM ── */
+.flow-grid{display:grid;grid-template-columns:repeat(5,1fr);margin:2.5rem 0 0;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.flow-grid-b{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--border);border-top:none;border-radius:0 0 12px 12px;overflow:hidden;margin-bottom:2.5rem}
+.fs{padding:18px 14px;border-right:1px solid var(--border);background:var(--card)}
+.fs:last-child{border-right:none}
+.fs.bad{background:rgba(232,69,90,.06);border-right-color:rgba(232,69,90,.15)}
+.fs-n{font-family:var(--fd);font-size:32px;color:rgba(232,69,90,.25);line-height:1;margin-bottom:6px}
+.fs.bad .fs-n{color:rgba(232,69,90,.5)}
+.fs-t{font-size:12px;font-weight:600;color:var(--white);margin-bottom:4px}
+.fs.bad .fs-t{color:#ffb3bb}
+.fs-s{font-size:11px;color:var(--t3);line-height:1.5}
+.pain-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
+.pain{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:22px;position:relative;overflow:hidden}
+.pain::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--red)}
+.pain-t{font-family:var(--fd);font-size:20px;color:var(--white);letter-spacing:1px;margin-bottom:8px}
+.pain-d{font-size:13px;color:var(--t2);line-height:1.65}
 
-  .section-title em {
-    color: var(--red);
-    font-style: normal;
-  }
+/* ── SOLUTION ── */
+.vs{display:grid;grid-template-columns:1fr 60px 1fr;gap:1.5rem;align-items:start;margin:2.5rem 0}
+.vs-col{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.vs-head{padding:12px 18px;font-family:var(--fm);font-size:10px;letter-spacing:3px;font-weight:500}
+.vs-head.b{background:rgba(239,68,68,.1);color:#fca5a5;border-bottom:1px solid rgba(239,68,68,.15)}
+.vs-head.a{background:rgba(34,197,94,.08);color:var(--green);border-bottom:1px solid rgba(34,197,94,.15)}
+.vs-item{display:flex;align-items:flex-start;gap:9px;padding:9px 18px;border-bottom:1px solid var(--border);font-size:13px;color:var(--t2)}
+.vs-item:last-child{border-bottom:none}
+.vi-x{color:#f87171;flex-shrink:0;margin-top:1px}
+.vi-c{color:var(--green);flex-shrink:0;margin-top:1px}
+.vs-arrow{display:flex;align-items:flex-start;justify-content:center;padding-top:52px;font-family:var(--fd);font-size:46px;color:var(--red)}
+.arc-flow{display:grid;grid-template-columns:repeat(4,1fr);background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-top:2rem}
+.afs{padding:24px 16px;text-align:center;border-right:1px solid var(--border)}
+.afs:last-child{border-right:none}
+.afs-n{font-family:var(--fd);font-size:44px;color:var(--red);line-height:1;margin-bottom:6px}
+.afs-l{font-size:13px;font-weight:600;color:var(--white);margin-bottom:4px}
+.afs-s{font-size:11px;color:var(--t3)}
 
-  /* ── FADE IN ANIMATION ── */
-  .fade-up {
-    opacity: 0;
-    transform: translateY(32px);
-    transition: opacity 0.65s ease, transform 0.65s ease;
-  }
-  .fade-up.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  .fade-up.delay-1 { transition-delay: 0.1s; }
-  .fade-up.delay-2 { transition-delay: 0.2s; }
-  .fade-up.delay-3 { transition-delay: 0.3s; }
-  .fade-up.delay-4 { transition-delay: 0.4s; }
-  .fade-up.delay-5 { transition-delay: 0.5s; }
+/* ── HOW IT WORKS ── */
+.phases{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;margin-top:2.5rem}
+.phase{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.phase-h{padding:18px 22px;border-bottom:1px solid var(--border)}
+.phase-lbl{font-family:var(--fm);font-size:10px;letter-spacing:3px;color:var(--t3);margin-bottom:5px;text-transform:uppercase}
+.phase-t{font-family:var(--fd);font-size:22px;letter-spacing:1px}
+.phase-body{padding:14px 0}
+.ps{display:flex;gap:11px;padding:9px 22px;border-bottom:1px solid var(--border)}
+.ps:last-child{border-bottom:none}
+.ps-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;margin-top:8px}
+.ps-t{font-size:12px;color:var(--t2);line-height:1.55}
+.ps-t strong{display:block;font-size:13px;font-weight:500;color:var(--white);margin-bottom:1px}
+.ph1 .phase-t{color:#93c5fd}
+.ph1 .ps-dot{background:#60a5fa}
+.ph2 .phase-t{color:#86efac}
+.ph2 .ps-dot{background:var(--green)}
+.ph3 .phase-t{color:#fca5a5}
+.ph3 .ps-dot{background:var(--red)}
 
-  /* ─────────────────────────────────────────────
-     HERO
-  ───────────────────────────────────────────── */
-  #hero {
-    min-height: 100vh;
-    display: flex; align-items: center;
-    position: relative; overflow: hidden;
-    padding-top: 56px;
-  }
+/* Actor types */
+.actor-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;margin-top:1.8rem}
+.ac{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:28px;position:relative;overflow:hidden}
+.ac.paid{border-color:rgba(34,197,94,.25)}
+.ac::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.ac.paid::before{background:var(--green)}
+.ac.free::before{background:var(--t3)}
+.ac-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:20px;font-size:11px;font-family:var(--fm);margin-bottom:14px}
+.ac-badge.p{background:var(--green-a10);color:var(--green);border:1px solid rgba(34,197,94,.22)}
+.ac-badge.f{background:rgba(255,255,255,.04);color:var(--t2);border:1px solid var(--border)}
+.ac-title{font-family:var(--fd);font-size:26px;color:var(--white);letter-spacing:1px;margin-bottom:14px}
+.ac-list li{padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--t2);display:flex;gap:8px;align-items:flex-start}
+.ac-list li:last-child{border-bottom:none}
+.ac-price{margin-top:18px;padding:11px 14px;background:var(--green-a10);border:1px solid rgba(34,197,94,.18);border-radius:8px;font-family:var(--fd);font-size:22px;color:var(--green)}
 
-  .hero-bg {
-    position: absolute; inset: 0;
-    background:
-      radial-gradient(ellipse 60% 50% at 70% 40%, rgba(232,69,90,0.08) 0%, transparent 70%),
-      radial-gradient(ellipse 40% 40% at 20% 80%, rgba(59,130,246,0.05) 0%, transparent 60%);
-  }
+/* ── PRODUCT/SERVICE/PROCESS ── */
+.psp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;margin-top:2rem}
+.psp{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:26px}
+.psp-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:14px}
+.psp-icon.p1{background:var(--red-a12);border:1px solid var(--red-a30)}
+.psp-icon.p2{background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.2)}
+.psp-icon.p3{background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.2)}
+.psp-lbl{font-family:var(--fm);font-size:10px;letter-spacing:3px;color:var(--t3);margin-bottom:6px;text-transform:uppercase}
+.psp-t{font-family:var(--fd);font-size:24px;color:var(--white);letter-spacing:1px;margin-bottom:12px}
+.psp-list li{font-size:13px;color:var(--t2);padding:6px 0;border-bottom:1px solid var(--border);display:flex;gap:7px;align-items:flex-start}
+.psp-list li:last-child{border-bottom:none}
+.psp-list li::before{content:'–';color:var(--red);flex-shrink:0}
 
-  .hero-grid {
-    position: absolute; inset: 0;
-    background-image:
-      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-    background-size: 60px 60px;
-    mask-image: radial-gradient(ellipse 80% 80% at center, black, transparent);
-  }
+/* ── TECH ARCH ── */
+.tech-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;margin-top:2.5rem}
+.tc{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.tc-head{padding:16px 20px;border-bottom:1px solid var(--border)}
+.tc-phase{font-family:var(--fm);font-size:10px;letter-spacing:2px;margin-bottom:4px}
+.tc-title{font-family:var(--fd);font-size:20px;letter-spacing:1px}
+.tc-sub{font-size:11px;color:var(--t3);margin-top:3px}
+.tc.t1 .tc-phase{color:#60a5fa}.tc.t1 .tc-title{color:#bfdbfe}
+.tc.t2 .tc-phase{color:var(--green)}.tc.t2 .tc-title{color:#bbf7d0}
+.tc.t3 .tc-phase{color:var(--red)}.tc.t3 .tc-title{color:#fecaca}
+.ti{display:flex;gap:10px;padding:10px 20px;border-bottom:1px solid var(--border)}
+.ti:last-child{border-bottom:none}
+.ti-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;margin-top:8px}
+.ti-l{font-size:13px;color:var(--white);font-weight:500;margin-bottom:2px}
+.ti-s{font-size:11px;color:var(--t3);font-family:var(--fm)}
+.stack-row{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-top:1.4rem;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.sl{font-family:var(--fm);font-size:10px;color:var(--t3);letter-spacing:2px;margin-right:4px}
+.stag{padding:3px 11px;background:var(--bg3);border:1px solid var(--border);border-radius:20px;font-size:11px;font-family:var(--fm);color:var(--t2)}
+.stag.open{border-color:rgba(34,197,94,.28);color:var(--green);background:var(--green-a10)}
 
-  .hero-content { position: relative; z-index: 2; }
+/* ── COMPETITORS ── */
+.comp-wrap{overflow-x:auto;margin:2.5rem 0}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:560px}
+thead tr{background:var(--bg3)}
+th{padding:11px 14px;color:var(--t2);font-family:var(--fm);font-size:10px;letter-spacing:2px;font-weight:400;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
+td{padding:12px 14px;border-bottom:1px solid var(--border);color:var(--t2)}
+tr:last-child td{border-bottom:none}
+tr.arc-row td{background:rgba(232,69,90,.06);font-weight:500;color:var(--t1)}
+tr.arc-row td:first-child{color:var(--red);font-weight:600}
+.yes{color:var(--green)!important}
+.no{color:#f87171!important}
+.comp-diff{display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;margin-top:1.5rem}
+.cd{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px}
+.cd-asp{font-family:var(--fm);font-size:9px;color:var(--t3);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.cd-them{font-size:12px;color:var(--t2);padding:3px 0}
+.cd-div{height:1px;background:var(--border);margin:6px 0}
+.cd-arc{font-size:12px;color:var(--red);font-weight:500;padding:3px 0}
+.pos-box{background:var(--bg3);border:1px solid var(--red-a30);border-radius:12px;padding:22px 28px;margin-top:1.5rem;text-align:center}
+.pos-box p{font-size:17px;color:var(--white);font-style:italic;line-height:1.6}
+.pos-box span{color:var(--red);font-style:normal;font-weight:600}
 
-  .hero-eyebrow {
-    font-family: var(--font-mono);
-    font-size: 12px;
-    letter-spacing: 4px;
-    color: var(--red);
-    text-transform: uppercase;
-    margin-bottom: 20px;
-    display: flex; align-items: center; gap: 10px;
-  }
-  .hero-eyebrow::before {
-    content: '';
-    width: 32px; height: 1px; background: var(--red);
-  }
+/* ── BUSINESS ── */
+.biz-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;margin-top:2.5rem}
+.biz{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:28px;position:relative;overflow:hidden}
+.biz.primary{border-color:var(--red-a30)}
+.biz.primary::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,rgba(232,69,90,.07) 0%,transparent 55%);pointer-events:none}
+.biz-lbl{font-family:var(--fm);font-size:10px;letter-spacing:3px;color:var(--t3);margin-bottom:8px;text-transform:uppercase}
+.biz-t{font-family:var(--fd);font-size:26px;color:var(--white);letter-spacing:1px;margin-bottom:14px}
+.biz-price{font-family:var(--fd);font-size:42px;color:var(--red);line-height:1;margin-bottom:6px}
+.biz-price.blue{color:#60a5fa}
+.biz-note{font-size:12px;color:var(--t3);margin-bottom:18px}
+.biz-list li{padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--t2);display:flex;gap:9px}
+.biz-list li:last-child{border-bottom:none}
+.loop-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:32px;margin-top:1.4rem;text-align:center}
+.loop-title{font-family:var(--fd);font-size:20px;color:var(--t2);letter-spacing:2px;margin-bottom:6px}
+.loop-sub{font-size:13px;color:var(--t3);margin-bottom:24px}
+.loop-nodes{display:flex;justify-content:center;align-items:center;gap:0;flex-wrap:wrap;gap:4px;margin-bottom:20px}
+.ln{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:14px 16px;min-width:140px;text-align:center}
+.ln-l{font-size:13px;font-weight:500;color:var(--white);margin-bottom:3px}
+.ln-s{font-size:11px;color:var(--t3)}
+.la{font-family:var(--fd);font-size:26px;color:var(--red);padding:0 4px;flex-shrink:0}
+.loop-note{padding:12px 20px;background:var(--bg3);border-radius:8px;font-size:12px;color:var(--t3);display:inline-block}
+.stat-strip{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin:2.5rem 0}
+.ss{padding:22px 16px;text-align:center;border-right:1px solid var(--border)}
+.ss:last-child{border-right:none}
+.ss-n{font-family:var(--fd);font-size:38px;color:var(--red);line-height:1;margin-bottom:4px}
+.ss-l{font-size:11px;color:var(--t3)}
 
-  .hero-title {
-    font-family: var(--font-display);
-    font-size: clamp(72px, 12vw, 140px);
-    line-height: 0.9;
-    color: var(--white);
-    letter-spacing: 4px;
-    margin-bottom: 24px;
-  }
-  .hero-title .accent { color: var(--red); }
+/* ── CTA ── */
+#cta{padding:120px 0;text-align:center;position:relative;overflow:hidden}
+#cta::before{content:'ARC';position:absolute;font-family:var(--fd);font-size:280px;color:rgba(232,69,90,.03);top:50%;left:50%;transform:translate(-50%,-50%);letter-spacing:20px;pointer-events:none;white-space:nowrap}
+.cta-t{font-family:var(--fd);font-size:clamp(44px,8vw,80px);color:var(--white);letter-spacing:3px;margin-bottom:18px;position:relative}
+.cta-s{font-size:17px;color:var(--t2);max-width:460px;margin:0 auto 36px;line-height:1.7}
+.cta-cards{display:grid;grid-template-columns:1fr 1fr;gap:1rem;max-width:620px;margin:0 auto 36px}
+.cc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:left}
+.cc.highlight{border-color:var(--red-a30);background:rgba(232,69,90,.05)}
+.cc-lbl{font-family:var(--fm);font-size:9px;color:var(--t3);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px}
+.cc.highlight .cc-lbl{color:var(--red)}
+.cc li{font-size:13px;color:var(--t2);padding:4px 0;display:flex;align-items:flex-start;gap:6px}
+.cc li::before{content:'→';color:var(--red);flex-shrink:0}
+.cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn-primary{background:var(--red);color:#fff;padding:15px 34px;border-radius:8px;font-weight:600;font-size:15px;transition:background .2s,transform .2s;display:inline-block}
+.btn-primary:hover{background:#c7374b;transform:translateY(-1px)}
+.btn-ghost{border:1px solid var(--border2);color:var(--t1);padding:15px 34px;border-radius:8px;font-weight:500;font-size:15px;transition:border-color .2s;display:inline-block}
+.btn-ghost:hover{border-color:var(--t2)}
+.cta-fine{margin-top:28px;font-family:var(--fm);font-size:10px;color:var(--t3);letter-spacing:2px}
 
-  .hero-sub {
-    font-size: 20px;
-    color: var(--muted2);
-    max-width: 520px;
-    margin-bottom: 40px;
-    line-height: 1.6;
-    font-weight: 300;
-  }
+/* ── FOOTER ── */
+footer{padding:22px 20px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--t3);font-family:var(--fm);flex-wrap:wrap;gap:8px}
 
-  .hero-sub strong { color: var(--white); font-weight: 500; }
-
-  .hero-stats {
-    display: flex; gap: 3rem;
-    margin-bottom: 48px;
-  }
-  .hero-stat-num {
-    font-family: var(--font-display);
-    font-size: 42px;
-    color: var(--red);
-    line-height: 1;
-  }
-  .hero-stat-label {
-    font-size: 13px;
-    color: var(--muted);
-    margin-top: 4px;
-  }
-
-  .hero-cta {
-    display: inline-flex; align-items: center; gap: 10px;
-    background: var(--red);
-    color: #fff;
-    padding: 14px 28px;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 15px;
-    text-decoration: none;
-    transition: background 0.2s, transform 0.2s;
-  }
-  .hero-cta:hover { background: #c73a4e; transform: translateY(-1px); }
-  .hero-cta-arrow { font-size: 18px; }
-
-  .hero-right {
-    position: absolute; right: 0; top: 50%; transform: translateY(-50%);
-    width: 38%; z-index: 1;
-  }
-
-  .mock-phone {
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 16px;
-    margin: 8px;
-    box-shadow: 0 40px 80px rgba(0,0,0,0.5);
-  }
-  .mock-header {
-    display: flex; align-items: center; gap: 8px;
-    margin-bottom: 12px; padding-bottom: 12px;
-    border-bottom: 1px solid var(--border);
-  }
-  .mock-dot { width: 8px; height: 8px; border-radius: 50%; }
-  .mock-title { font-size: 12px; color: var(--muted2); font-family: var(--font-mono); }
-  .mock-msg {
-    padding: 8px 12px;
-    border-radius: 10px;
-    font-size: 13px;
-    margin-bottom: 8px;
-    max-width: 85%;
-  }
-  .msg-in {
-    background: var(--bg2);
-    color: var(--muted2);
-    border: 1px solid var(--border);
-  }
-  .msg-out {
-    background: rgba(232,69,90,0.15);
-    color: var(--red);
-    border: 1px solid var(--red-border);
-    margin-left: auto;
-  }
-  .mock-badge {
-    display: inline-block;
-    background: rgba(34,197,94,0.1);
-    color: var(--green);
-    border: 1px solid rgba(34,197,94,0.25);
-    border-radius: 20px;
-    padding: 3px 10px;
-    font-size: 11px;
-    font-family: var(--font-mono);
-    margin-top: 4px;
-  }
-
-  /* ─────────────────────────────────────────────
-     WHAT IS CASTING
-  ───────────────────────────────────────────── */
-  #what { background: var(--bg2); }
-
-  .what-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3rem;
-    align-items: center;
-  }
-
-  .flow-steps { list-style: none; }
-  .flow-step {
-    display: flex; gap: 16px;
-    padding: 16px 0;
-    border-bottom: 1px solid var(--border);
-  }
-  .flow-step:last-child { border-bottom: none; }
-  .step-num {
-    width: 32px; height: 32px; flex-shrink: 0;
-    border-radius: 50%;
-    background: var(--red-dim);
-    border: 1px solid var(--red-border);
-    display: flex; align-items: center; justify-content: center;
-    font-family: var(--font-mono);
-    font-size: 12px;
-    color: var(--red);
-  }
-  .step-body strong {
-    display: block;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--white);
-    margin-bottom: 3px;
-  }
-  .step-body span {
-    font-size: 13px;
-    color: var(--muted2);
-  }
-
-  .casting-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 28px;
-  }
-  .casting-card-title {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 3px;
-    color: var(--muted);
-    text-transform: uppercase;
-    margin-bottom: 16px;
-  }
-  .brief-box {
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--red);
-    padding: 14px 16px;
-    border-radius: 0 8px 8px 0;
-    font-size: 15px;
-    color: var(--white);
-    margin-bottom: 20px;
-    font-style: italic;
-  }
-  .actor-tags {
-    display: flex; flex-wrap: wrap; gap: 8px;
-  }
-  .tag {
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-family: var(--font-mono);
-  }
-  .tag-red { background: var(--red-dim); color: var(--red); border: 1px solid var(--red-border); }
-  .tag-blue { background: rgba(59,130,246,0.1); color: #60A5FA; border: 1px solid rgba(59,130,246,0.2); }
-  .tag-green { background: var(--green-dim); color: var(--green); border: 1px solid rgba(34,197,94,0.25); }
-  .tag-gray { background: rgba(255,255,255,0.05); color: var(--muted2); border: 1px solid var(--border); }
-
-  /* ─────────────────────────────────────────────
-     PROBLEM
-  ───────────────────────────────────────────── */
-  #problem { background: var(--bg); }
-
-  .problem-flow {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 0;
-    margin: 3rem 0;
-    position: relative;
-  }
-
-  .problem-step-card {
-    padding: 20px 16px;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-right: none;
-    position: relative;
-    transition: background 0.2s;
-  }
-  .problem-step-card:first-child { border-radius: 10px 0 0 10px; }
-  .problem-step-card:last-child {
-    border-right: 1px solid var(--border);
-    border-radius: 0 10px 10px 0;
-  }
-  .problem-step-card:hover { background: var(--bg3); }
-
-  .pstep-num {
-    font-family: var(--font-display);
-    font-size: 36px;
-    color: rgba(232,69,90,0.2);
-    line-height: 1;
-    margin-bottom: 8px;
-  }
-  .pstep-title {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--white);
-    margin-bottom: 6px;
-  }
-  .pstep-sub { font-size: 12px; color: var(--muted); }
-
-  .arrow-connector {
-    position: absolute; right: -12px; top: 50%;
-    transform: translateY(-50%);
-    z-index: 2;
-    background: var(--bg2);
-    width: 24px; height: 24px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    border: 1px solid var(--border);
-    font-size: 11px;
-    color: var(--muted);
-  }
-
-  .problem-row-2 {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0;
-    margin-bottom: 3rem;
-  }
-  .problem-step-card.danger { border-color: var(--red-border); background: rgba(232,69,90,0.06); }
-  .problem-step-card.danger .pstep-num { color: rgba(232,69,90,0.5); }
-  .problem-step-card.danger .pstep-title { color: #FFAAAA; }
-
-  .pain-cards {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
-    margin-top: 3rem;
-  }
-  .pain-card {
-    padding: 24px;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    position: relative;
-    overflow: hidden;
-  }
-  .pain-card::before {
-    content: '';
-    position: absolute; top: 0; left: 0;
-    width: 100%; height: 3px;
-    background: var(--red);
-  }
-  .pain-icon {
-    font-size: 24px;
-    margin-bottom: 12px;
-  }
-  .pain-title {
-    font-family: var(--font-display);
-    font-size: 20px;
-    color: var(--white);
-    margin-bottom: 8px;
-    letter-spacing: 1px;
-  }
-  .pain-desc { font-size: 14px; color: var(--muted2); line-height: 1.6; }
-
-  /* ─────────────────────────────────────────────
-     SOLUTION
-  ───────────────────────────────────────────── */
-  #solution { background: var(--bg2); }
-
-  .vs-grid {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    gap: 2rem;
-    align-items: start;
-    margin: 2.5rem 0;
-  }
-
-  .vs-col {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    overflow: hidden;
-  }
-  .vs-col-header {
-    padding: 14px 20px;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 3px;
-    font-weight: 500;
-  }
-  .vs-col-header.before {
-    background: rgba(239,68,68,0.12);
-    color: #F87171;
-    border-bottom: 1px solid rgba(239,68,68,0.2);
-  }
-  .vs-col-header.after {
-    background: rgba(34,197,94,0.1);
-    color: var(--green);
-    border-bottom: 1px solid rgba(34,197,94,0.2);
-  }
-  .vs-items { padding: 8px 0; }
-  .vs-item {
-    display: flex; align-items: flex-start; gap: 10px;
-    padding: 10px 20px;
-    font-size: 14px;
-    color: var(--muted2);
-    border-bottom: 1px solid var(--border);
-  }
-  .vs-item:last-child { border-bottom: none; }
-  .vs-item-icon { flex-shrink: 0; margin-top: 2px; font-size: 14px; }
-  .vs-x { color: #F87171; }
-  .vs-check { color: var(--green); }
-
-  .vs-arrow {
-    display: flex; align-items: center; justify-content: center;
-    padding-top: 60px;
-    font-family: var(--font-display);
-    font-size: 48px;
-    color: var(--red);
-  }
-
-  .arc-flow {
-    display: flex;
-    gap: 0;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    overflow: hidden;
-    margin-top: 2.5rem;
-  }
-  .arc-flow-step {
-    flex: 1;
-    padding: 28px 20px;
-    text-align: center;
-    border-right: 1px solid var(--border);
-    position: relative;
-  }
-  .arc-flow-step:last-child { border-right: none; }
-  .arc-flow-num {
-    font-family: var(--font-display);
-    font-size: 48px;
-    color: var(--red);
-    line-height: 1;
-    margin-bottom: 8px;
-  }
-  .arc-flow-label {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--white);
-    margin-bottom: 6px;
-  }
-  .arc-flow-sub { font-size: 12px; color: var(--muted); }
-
-  /* ─────────────────────────────────────────────
-     HOW IT WORKS
-  ───────────────────────────────────────────── */
-  #howitworks { background: var(--bg); }
-
-  .three-phases {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-    margin-top: 2.5rem;
-  }
-  .phase-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    overflow: hidden;
-    position: relative;
-  }
-  .phase-header {
-    padding: 20px 24px;
-    border-bottom: 1px solid var(--border);
-    position: relative;
-  }
-  .phase-num {
-    font-family: var(--font-display);
-    font-size: 64px;
-    color: rgba(255,255,255,0.04);
-    position: absolute; right: 16px; top: 8px;
-    line-height: 1;
-  }
-  .phase-label {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 3px;
-    color: var(--muted);
-    text-transform: uppercase;
-    margin-bottom: 6px;
-  }
-  .phase-title {
-    font-family: var(--font-display);
-    font-size: 22px;
-    letter-spacing: 1px;
-    position: relative; z-index: 1;
-  }
-  .phase-steps { padding: 16px 24px; }
-  .phase-step {
-    display: flex; gap: 12px;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--border);
-  }
-  .phase-step:last-child { border-bottom: none; }
-  .phase-step-dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    flex-shrink: 0; margin-top: 7px;
-  }
-  .phase-step-text { font-size: 13px; color: var(--muted2); }
-  .phase-step-text strong { color: var(--white); font-weight: 500; display: block; margin-bottom: 2px; }
-
-  .phase-1 .phase-title { color: #60A5FA; }
-  .phase-1 .phase-step-dot { background: #60A5FA; }
-  .phase-2 .phase-title { color: var(--green); }
-  .phase-2 .phase-step-dot { background: var(--green); }
-  .phase-3 .phase-title { color: var(--red); }
-  .phase-3 .phase-step-dot { background: var(--red); }
-
-  /* ─────────────────────────────────────────────
-     ACTOR TYPES
-  ───────────────────────────────────────────── */
-  .actor-types-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-    margin-top: 2rem;
-  }
-  .actor-type-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 32px;
-    position: relative;
-    overflow: hidden;
-  }
-  .actor-type-card.paid {
-    border-color: rgba(34,197,94,0.3);
-  }
-  .actor-type-card.paid::before {
-    content: '';
-    position: absolute; top: 0; left: 0; right: 0;
-    height: 3px; background: var(--green);
-  }
-  .actor-type-card.free::before {
-    content: '';
-    position: absolute; top: 0; left: 0; right: 0;
-    height: 3px; background: var(--muted);
-  }
-  .actor-badge {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-family: var(--font-mono);
-    font-weight: 500;
-    margin-bottom: 16px;
-  }
-  .actor-badge.paid { background: var(--green-dim); color: var(--green); border: 1px solid rgba(34,197,94,0.25); }
-  .actor-badge.free { background: rgba(255,255,255,0.05); color: var(--muted2); border: 1px solid var(--border); }
-  .actor-type-title {
-    font-family: var(--font-display);
-    font-size: 28px;
-    color: var(--white);
-    letter-spacing: 1px;
-    margin-bottom: 16px;
-  }
-  .actor-features { list-style: none; }
-  .actor-features li {
-    padding: 8px 0;
-    border-bottom: 1px solid var(--border);
-    font-size: 14px;
-    color: var(--muted2);
-    display: flex; align-items: center; gap: 8px;
-  }
-  .actor-features li:last-child { border-bottom: none; }
-  .actor-price {
-    margin-top: 20px;
-    padding: 12px 16px;
-    background: var(--green-dim);
-    border: 1px solid rgba(34,197,94,0.2);
-    border-radius: 8px;
-    font-family: var(--font-display);
-    font-size: 22px;
-    color: var(--green);
-  }
-
-  /* ─────────────────────────────────────────────
-     PRODUCT COMPONENTS
-  ───────────────────────────────────────────── */
-  #product { background: var(--bg2); }
-
-  .pvc-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-    margin-top: 2rem;
-  }
-  .pvc-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 28px;
-  }
-  .pvc-icon {
-    width: 44px; height: 44px;
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 20px;
-    margin-bottom: 16px;
-  }
-  .pvc-icon.product { background: var(--red-dim); border: 1px solid var(--red-border); }
-  .pvc-icon.service { background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); }
-  .pvc-icon.process { background: rgba(168,85,247,0.1); border: 1px solid rgba(168,85,247,0.2); }
-  .pvc-type {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 3px;
-    color: var(--muted);
-    text-transform: uppercase;
-    margin-bottom: 8px;
-  }
-  .pvc-title {
-    font-family: var(--font-display);
-    font-size: 24px;
-    color: var(--white);
-    letter-spacing: 1px;
-    margin-bottom: 12px;
-  }
-  .pvc-list { list-style: none; }
-  .pvc-list li {
-    font-size: 13px; color: var(--muted2);
-    padding: 6px 0;
-    border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; gap: 8px;
-  }
-  .pvc-list li:last-child { border-bottom: none; }
-  .pvc-list li::before { content: '–'; color: var(--red); flex-shrink: 0; }
-
-  /* ─────────────────────────────────────────────
-     TECH ARCH
-  ───────────────────────────────────────────── */
-  #tech { background: var(--bg); }
-
-  .tech-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-    margin-top: 2.5rem;
-  }
-  .tech-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    overflow: hidden;
-  }
-  .tech-card-header {
-    padding: 18px 20px;
-    border-bottom: 1px solid var(--border);
-  }
-  .tech-phase-num {
-    font-family: var(--font-display);
-    font-size: 13px;
-    letter-spacing: 2px;
-    margin-bottom: 4px;
-  }
-  .tech-phase-title {
-    font-family: var(--font-display);
-    font-size: 22px;
-    letter-spacing: 1px;
-  }
-  .tech-phase-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
-
-  .tech-phase-1 .tech-phase-num { color: #60A5FA; }
-  .tech-phase-1 .tech-phase-title { color: #BFDBFE; }
-  .tech-phase-2 .tech-phase-num { color: var(--green); }
-  .tech-phase-2 .tech-phase-title { color: #BBF7D0; }
-  .tech-phase-3 .tech-phase-num { color: var(--red); }
-  .tech-phase-3 .tech-phase-title { color: #FECACA; }
-
-  .tech-items { padding: 8px 0; }
-  .tech-item {
-    display: flex; align-items: flex-start; gap: 10px;
-    padding: 10px 20px;
-    border-bottom: 1px solid var(--border);
-  }
-  .tech-item:last-child { border-bottom: none; }
-  .tech-bullet {
-    width: 6px; height: 6px; border-radius: 50%;
-    flex-shrink: 0; margin-top: 7px;
-  }
-  .tech-item-label { font-size: 13px; color: var(--white); margin-bottom: 2px; font-weight: 500; }
-  .tech-item-detail { font-size: 11px; color: var(--muted); font-family: var(--font-mono); }
-
-  .tech-stack-bar {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px 24px;
-    margin-top: 1.5rem;
-    display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
-  }
-  .tech-stack-label {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--muted);
-    letter-spacing: 2px;
-    margin-right: 8px;
-  }
-  .stack-tag {
-    padding: 4px 12px;
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    font-size: 12px;
-    font-family: var(--font-mono);
-    color: var(--muted2);
-  }
-  .stack-tag.open { border-color: rgba(34,197,94,0.3); color: var(--green); background: var(--green-dim); }
-
-  /* ─────────────────────────────────────────────
-     COMPETITORS
-  ───────────────────────────────────────────── */
-  #competitors { background: var(--bg2); }
-
-  .comp-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 2.5rem;
-    font-size: 14px;
-  }
-  .comp-table th {
-    padding: 12px 16px;
-    background: var(--bg3);
-    color: var(--muted2);
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 2px;
-    font-weight: 400;
-    text-align: left;
-    border-bottom: 1px solid var(--border);
-  }
-  .comp-table td {
-    padding: 14px 16px;
-    border-bottom: 1px solid var(--border);
-    color: var(--muted2);
-  }
-  .comp-table tr:last-child td { border-bottom: none; }
-  .comp-table tr.arc-row td {
-    background: rgba(232,69,90,0.06);
-    color: var(--text);
-    font-weight: 500;
-  }
-  .comp-table tr.arc-row td:first-child {
-    color: var(--red);
-    font-weight: 600;
-  }
-  .yes { color: var(--green) !important; }
-  .no { color: #F87171 !important; }
-
-  .comp-key {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 1rem;
-    margin-top: 2rem;
-  }
-  .comp-key-item {
-    padding: 18px;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-  }
-  .comp-key-aspect {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    color: var(--muted);
-    letter-spacing: 2px;
-    margin-bottom: 10px;
-    text-transform: uppercase;
-  }
-  .comp-key-them { font-size: 12px; color: var(--muted2); padding: 4px 0; }
-  .comp-key-arc { font-size: 12px; color: var(--red); padding: 4px 0; font-weight: 500; }
-  .comp-key-divider { height: 1px; background: var(--border); margin: 6px 0; }
-
-  .positioning-box {
-    background: var(--bg3);
-    border: 1px solid var(--red-border);
-    border-radius: 12px;
-    padding: 24px 32px;
-    margin-top: 2rem;
-    text-align: center;
-  }
-  .positioning-box p {
-    font-size: 18px;
-    color: var(--white);
-    font-style: italic;
-    line-height: 1.5;
-  }
-  .positioning-box span { color: var(--red); font-style: normal; font-weight: 600; }
-
-  /* ─────────────────────────────────────────────
-     BUSINESS MODEL
-  ───────────────────────────────────────────── */
-  #business { background: var(--bg); }
-
-  .biz-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-    margin-top: 2.5rem;
-  }
-  .biz-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 32px;
-    position: relative; overflow: hidden;
-  }
-  .biz-card.primary {
-    border-color: var(--red-border);
-    background: linear-gradient(135deg, rgba(232,69,90,0.08) 0%, var(--card) 60%);
-  }
-  .biz-label {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 3px;
-    color: var(--muted);
-    text-transform: uppercase;
-    margin-bottom: 10px;
-  }
-  .biz-title {
-    font-family: var(--font-display);
-    font-size: 28px;
-    color: var(--white);
-    letter-spacing: 1px;
-    margin-bottom: 16px;
-  }
-  .biz-price {
-    font-family: var(--font-display);
-    font-size: 44px;
-    color: var(--red);
-    line-height: 1;
-    margin-bottom: 8px;
-  }
-  .biz-price-note { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
-  .biz-features { list-style: none; }
-  .biz-features li {
-    padding: 9px 0;
-    border-bottom: 1px solid var(--border);
-    font-size: 14px;
-    color: var(--muted2);
-    display: flex; gap: 10px; align-items: flex-start;
-  }
-  .biz-features li:last-child { border-bottom: none; }
-
-  /* Growth Loop */
-  .growth-loop {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 40px;
-    margin-top: 1.5rem;
-    text-align: center;
-  }
-  .loop-nodes {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 0;
-    flex-wrap: wrap;
-    margin: 2rem 0;
-  }
-  .loop-node {
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 16px 20px;
-    min-width: 160px;
-    text-align: center;
-  }
-  .loop-node-label {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--white);
-    margin-bottom: 4px;
-  }
-  .loop-node-sub { font-size: 11px; color: var(--muted); }
-  .loop-arrow {
-    font-family: var(--font-display);
-    font-size: 28px;
-    color: var(--red);
-    padding: 0 8px;
-  }
-  .loop-title {
-    font-family: var(--font-display);
-    font-size: 22px;
-    color: var(--muted2);
-    letter-spacing: 2px;
-    margin-bottom: 8px;
-  }
-
-  /* ─────────────────────────────────────────────
-     CTA
-  ───────────────────────────────────────────── */
-  #cta {
-    background: var(--bg2);
-    padding: 120px 0;
-    text-align: center;
-    position: relative; overflow: hidden;
-  }
-  #cta::before {
-    content: 'ARC';
-    position: absolute;
-    font-family: var(--font-display);
-    font-size: 300px;
-    color: rgba(232,69,90,0.04);
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    letter-spacing: 20px;
-    pointer-events: none;
-    white-space: nowrap;
-  }
-
-  .cta-title {
-    font-family: var(--font-display);
-    font-size: clamp(48px, 8vw, 80px);
-    color: var(--white);
-    letter-spacing: 3px;
-    margin-bottom: 20px;
-    position: relative;
-  }
-  .cta-sub {
-    font-size: 18px;
-    color: var(--muted2);
-    max-width: 480px;
-    margin: 0 auto 40px;
-  }
-  .cta-buttons {
-    display: flex; gap: 16px; justify-content: center;
-    flex-wrap: wrap;
-  }
-  .cta-btn-primary {
-    background: var(--red);
-    color: #fff;
-    padding: 16px 36px;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 16px;
-    text-decoration: none;
-    transition: background 0.2s;
-  }
-  .cta-btn-primary:hover { background: #c73a4e; }
-  .cta-btn-ghost {
-    background: transparent;
-    color: var(--text);
-    padding: 16px 36px;
-    border-radius: 8px;
-    font-weight: 500;
-    font-size: 16px;
-    text-decoration: none;
-    border: 1px solid var(--border);
-    transition: border-color 0.2s;
-  }
-  .cta-btn-ghost:hover { border-color: var(--muted2); }
-
-  /* ─────────────────────────────────────────────
-     FINAL STAT BAR
-  ───────────────────────────────────────────── */
-  .stat-bar {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    margin: 60px 0;
-  }
-  .stat-bar-item {
-    padding: 24px;
-    text-align: center;
-    border-right: 1px solid var(--border);
-  }
-  .stat-bar-item:last-child { border-right: none; }
-  .stat-bar-num {
-    font-family: var(--font-display);
-    font-size: 40px;
-    color: var(--red);
-    line-height: 1;
-    margin-bottom: 6px;
-  }
-  .stat-bar-label { font-size: 12px; color: var(--muted); }
-
-  /* ─────────────────────────────────────────────
-     FOOTER
-  ───────────────────────────────────────────── */
-  footer {
-    padding: 24px 2rem;
-    border-top: 1px solid var(--border);
-    display: flex; justify-content: space-between; align-items: center;
-    font-size: 12px; color: var(--muted);
-    font-family: var(--font-mono);
-  }
-
-  /* ─────────────────────────────────────────────
-     RESPONSIVE
-  ───────────────────────────────────────────── */
-  @media (max-width: 800px) {
-    .what-grid, .vs-grid, .three-phases, .biz-grid, .pvc-grid, .tech-grid,
-    .pain-cards, .actor-types-grid, .comp-key { grid-template-columns: 1fr; }
-    .problem-flow { grid-template-columns: 1fr 1fr; }
-    .problem-row-2 { grid-template-columns: 1fr 1fr; }
-    .hero-right { display: none; }
-    .stat-bar { grid-template-columns: 1fr 1fr; }
-    .nav-links { display: none; }
-    .vs-grid { grid-template-columns: 1fr; }
-    .vs-arrow { display: none; }
-    .loop-nodes { flex-direction: column; }
-  }
+/* ── RESPONSIVE ── */
+@media(max-width:860px){
+  .hero-inner{grid-template-columns:1fr}
+  .mock-wrap{display:none}
+  .what-grid,.vs,.biz-grid,.phases,.actor-grid,.psp-grid,.tech-grid,.cta-cards,.comp-diff{grid-template-columns:1fr}
+  .vs-arrow{display:none}
+  .flow-grid{grid-template-columns:1fr 1fr}
+  .flow-grid-b{grid-template-columns:1fr 1fr}
+  .pain-grid{grid-template-columns:1fr}
+  .arc-flow{grid-template-columns:1fr 1fr}
+  .stat-strip{grid-template-columns:1fr 1fr}
+  .ss{border-bottom:1px solid var(--border)}
+  .loop-nodes{flex-direction:column;align-items:center}
+  .la{transform:rotate(90deg)}
+  .nav-links{display:none}
+  .hamburger{display:flex}
+}
+@media(max-width:480px){
+  .flow-grid,.flow-grid-b{grid-template-columns:1fr}
+  .arc-flow{grid-template-columns:1fr}
+  .afs{border-right:none;border-bottom:1px solid var(--border)}
+  .afs:last-child{border-bottom:none}
+  .stat-strip{grid-template-columns:1fr 1fr}
+  .h1{font-size:70px}
+}
 </style>
 </head>
 <body>
 
-<!-- ── NAV ── -->
+<!-- NAV -->
 <nav>
-  <div class="nav-logo">A<span>R</span>C</div>
+  <div class="logo">A<span>R</span>C</div>
   <ul class="nav-links">
-    <li><a href="#what">What</a></li>
+    <li><a href="#what">Context</a></li>
     <li><a href="#problem">Problem</a></li>
     <li><a href="#solution">Solution</a></li>
     <li><a href="#howitworks">How It Works</a></li>
     <li><a href="#tech">Tech</a></li>
-    <li><a href="#competitors">Competition</a></li>
-    <li><a href="#business">Business Model</a></li>
-    <li><a href="#cta" class="nav-cta">Let's Build</a></li>
+    <li><a href="#competitors">Market</a></li>
+    <li><a href="#business">Business</a></li>
+    <li><a href="#cta" class="nav-cta">Let's Build →</a></li>
   </ul>
-</nav>
-
-<!-- ═══════════════════════════════════════════
-     HERO
-══════════════════════════════════════════════ -->
-<section id="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-grid"></div>
-  <div class="container">
-    <div class="hero-content">
-      <div class="hero-eyebrow fade-up">Casting Infrastructure Platform</div>
-      <div class="hero-title fade-up delay-1">ARC<span class="accent">.</span></div>
-      <p class="hero-sub fade-up delay-2">
-        The system that turns casting from a <strong>4-hour manual grind</strong> into a <strong>10-minute workflow</strong>. We're building the backend for India's casting industry.
-      </p>
-      <div class="hero-stats fade-up delay-3">
-        <div>
-          <div class="hero-stat-num">4 hrs</div>
-          <div class="hero-stat-label">wasted per casting today</div>
-        </div>
-        <div>
-          <div class="hero-stat-num">10 min</div>
-          <div class="hero-stat-label">with ARC</div>
-        </div>
-        <div>
-          <div class="hero-stat-num">0</div>
-          <div class="hero-stat-label">real solutions exist yet</div>
-        </div>
-      </div>
-      <a href="#problem" class="hero-cta fade-up delay-4">
-        See the Problem <span class="hero-cta-arrow">↓</span>
-      </a>
-    </div>
+  <div class="hamburger" id="ham" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
   </div>
-  <!-- Mock WhatsApp-like card on right -->
-  <div class="hero-right fade-up delay-3">
-    <div class="mock-phone">
-      <div class="mock-header">
-        <div class="mock-dot" style="background:#22C55E"></div>
-        <div class="mock-dot" style="background:#EAB308"></div>
-        <div class="mock-dot" style="background:#EF4444"></div>
-        <span class="mock-title" style="margin-left:8px">ARC WORKFLOW</span>
+</nav>
+<div class="mobile-menu" id="mm">
+  <a href="#what" onclick="closeMenu()">Context</a>
+  <a href="#problem" onclick="closeMenu()">The Problem</a>
+  <a href="#solution" onclick="closeMenu()">The Solution</a>
+  <a href="#howitworks" onclick="closeMenu()">How It Works</a>
+  <a href="#tech" onclick="closeMenu()">Tech Architecture</a>
+  <a href="#competitors" onclick="closeMenu()">Market & Competition</a>
+  <a href="#business" onclick="closeMenu()">Business Model</a>
+  <a href="#cta" onclick="closeMenu()" class="nav-cta">Let's Build →</a>
+</div>
+
+<!-- ═══ HERO ═══ -->
+<section id="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-grid-bg"></div>
+  <div class="container">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-eyebrow fu">Casting Infrastructure Platform</div>
+        <div class="hero-title fu d1">ARC<span class="dot">.</span></div>
+        <p class="hero-desc fu d2">
+          The system that turns casting from a <strong>4-hour manual grind</strong> into a <strong>10-minute workflow.</strong><br>We're building the backend for India's casting industry.
+        </p>
+        <div class="hero-stats fu d3">
+          <div><div class="hstat-n">4 hrs</div><div class="hstat-l">wasted per casting today</div></div>
+          <div><div class="hstat-n">10 min</div><div class="hstat-l">with ARC</div></div>
+          <div><div class="hstat-n">0</div><div class="hstat-l">real solutions exist yet</div></div>
+        </div>
+        <a href="#problem" class="hero-btn fu d4">See the Problem ↓</a>
       </div>
-      <div class="mock-msg msg-in">Hey, need a male 25–30, urban look for an ad brief</div>
-      <div class="mock-msg msg-out">
-        Found 14 matching profiles
-        <div><span class="mock-badge">● SEARCHING</span></div>
-      </div>
-      <div class="mock-msg msg-in">Send me the deck</div>
-      <div class="mock-msg msg-out">
-        Deck generated → shareable link ready
-        <div><span class="mock-badge">● DONE IN 10 MIN</span></div>
-      </div>
-      <div class="mock-msg msg-in">Client wants 5 more options</div>
-      <div class="mock-msg msg-out">
-        Updated selection → new deck sent
-        <div><span class="mock-badge">● NO REPEAT WORK</span></div>
+      <div class="fu d3">
+        <div class="mock-wrap">
+          <div class="mock-bar">
+            <div class="mock-dot" style="background:#22c55e"></div>
+            <div class="mock-dot" style="background:#eab308;margin-left:4px"></div>
+            <div class="mock-dot" style="background:#ef4444;margin-left:4px"></div>
+            <span class="mock-bar-label" style="margin-left:10px">ARC — LIVE WORKFLOW</span>
+          </div>
+          <div class="msg msg-in">Hey, need a male 25–30, urban look. FMCG ad, next week.</div>
+          <div class="msg msg-out">Searching… 14 profiles match<div><span class="badge">● SEARCHING DATABASE</span></div></div>
+          <div class="msg msg-in">Send me the deck</div>
+          <div class="msg msg-out">Deck ready. Shareable link generated.<div><span class="badge">● DONE IN 10 MIN</span></div></div>
+          <div class="msg msg-in">Client wants 5 more options, slightly younger</div>
+          <div class="msg msg-out">Updated selection → new deck sent. No rework.<div><span class="badge">● ITERATION: 30 SEC</span></div></div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════
-     WHAT IS CASTING?
-══════════════════════════════════════════════ -->
-<section id="what">
+<!-- ═══ WHAT IS CASTING ═══ -->
+<section id="what" class="alt">
   <div class="container">
-    <div class="section-label fade-up">Context</div>
-    <h2 class="section-title fade-up delay-1">What is <em>casting</em>, and who is this for?</h2>
+    <div class="label fu">Context</div>
+    <h2 class="h2 fu d1">What is <em>casting</em>, and who is this for?</h2>
     <div class="what-grid">
-      <div class="fade-up delay-1">
-        <p style="color:var(--muted2); font-size:15px; margin-bottom:24px; line-height:1.8;">
-          Casting means selecting actors for ads, films, and web series. A brand tells a casting agency what they need — the agency's job is to find matching actors and send their photos/videos to the client.
-        </p>
-        <p style="color:var(--muted2); font-size:15px; margin-bottom:32px; line-height:1.8;">
-          ARC is built for <strong style="color:var(--white)">casting agencies</strong> — the people in the middle who manage hundreds of actors and fulfill briefs daily. They are our primary user.
-        </p>
-        <ul class="flow-steps">
-          <li class="flow-step">
-            <div class="step-num">1</div>
-            <div class="step-body">
-              <strong>Client gives brief</strong>
-              <span>e.g. "Female, 20–25, bubbly, North Indian"</span>
-            </div>
-          </li>
-          <li class="flow-step">
-            <div class="step-num">2</div>
-            <div class="step-body">
-              <strong>Agency finds matching actors</strong>
-              <span>From their database of hundreds or thousands</span>
-            </div>
-          </li>
-          <li class="flow-step">
-            <div class="step-num">3</div>
-            <div class="step-body">
-              <strong>Agency sends photos/videos</strong>
-              <span>Formatted as a deck or PPT, via WhatsApp or Drive</span>
-            </div>
-          </li>
-          <li class="flow-step">
-            <div class="step-num">4</div>
-            <div class="step-body">
-              <strong>Client gives feedback → repeat</strong>
-              <span>This loop happens multiple times per casting</span>
-            </div>
-          </li>
+      <div>
+        <p class="sub fu d1" style="margin-bottom:20px">Casting means selecting actors for ads, films, and web series. A brand tells a casting agency what they need — the agency finds matching actors and sends their photos/videos to the client.</p>
+        <p class="fu d2" style="color:var(--t2);font-size:14px;margin-bottom:22px;line-height:1.8">ARC is built for <strong style="color:var(--white)">casting agencies</strong> — the people managing hundreds of actors and fulfilling multiple briefs daily. They are our primary user and product champion.</p>
+        <ul class="step-list fu d3">
+          <li class="step-row"><div class="step-n">1</div><div class="step-t"><strong>Client gives brief</strong><span>e.g. "Female, 20–25, bubbly, North Indian look for ad shoot"</span></div></li>
+          <li class="step-row"><div class="step-n">2</div><div class="step-t"><strong>Agency finds matching actors</strong><span>From their database of hundreds or thousands of actors</span></div></li>
+          <li class="step-row"><div class="step-n">3</div><div class="step-t"><strong>Agency sends photos/videos</strong><span>Formatted as a deck or PPT, delivered via WhatsApp or Drive</span></div></li>
+          <li class="step-row"><div class="step-n">4</div><div class="step-t"><strong>Client gives feedback → repeat</strong><span>This loop happens 2–5 times per casting. Every loop = manual rework.</span></div></li>
         </ul>
       </div>
-      <div class="fade-up delay-2">
-        <div class="casting-card">
-          <div class="casting-card-title">Example Brief</div>
-          <div class="brief-box">
-            "We need a boy, age 25–30, good-looking, modern, confident for an FMCG ad shoot next week."
+      <div class="fu d2">
+        <div class="info-card">
+          <div class="info-card-label">Example Brief</div>
+          <div class="brief-quote">"We need a boy, age 25–30, good-looking, modern, confident for an FMCG ad shoot next week."</div>
+          <div style="font-size:11px;color:var(--t3);margin-bottom:12px;font-family:var(--fm);letter-spacing:1px">AGENCY NOW NEEDS TO FIND:</div>
+          <div class="tags">
+            <span class="tag tag-r">Male</span>
+            <span class="tag tag-r">Age 25–30</span>
+            <span class="tag tag-b">Modern Look</span>
+            <span class="tag tag-b">Confident</span>
+            <span class="tag tag-g">Photos</span>
+            <span class="tag tag-g">Videos</span>
+            <span class="tag tag-d">Portfolio PDF</span>
+            <span class="tag tag-d">Contact Info</span>
           </div>
-          <div style="font-size:12px; color:var(--muted); margin-bottom:12px; font-family:var(--font-mono); letter-spacing:1px;">AGENCY NOW NEEDS TO FIND:</div>
-          <div class="actor-tags">
-            <span class="tag tag-red">Male</span>
-            <span class="tag tag-red">Age 25–30</span>
-            <span class="tag tag-blue">Modern Look</span>
-            <span class="tag tag-blue">Confident</span>
-            <span class="tag tag-green">Photos</span>
-            <span class="tag tag-green">Videos</span>
-            <span class="tag tag-gray">Portfolio PDF</span>
-            <span class="tag tag-gray">Contact Info</span>
-          </div>
-          <div style="margin-top:24px; padding:16px; background:var(--bg3); border-radius:8px; border:1px solid var(--border);">
-            <div style="font-size:12px; color:var(--muted); margin-bottom:8px;">TODAY THIS TAKES:</div>
-            <div style="font-family:var(--font-display); font-size:28px; color:var(--red);">3–4 Hours</div>
-            <div style="font-size:13px; color:var(--muted2);">of manual searching, downloading, and re-uploading</div>
+          <div class="time-box">
+            <div style="font-size:11px;color:var(--t3);margin-bottom:6px;font-family:var(--fm)">THIS TAKES TODAY:</div>
+            <div class="n">3–4 Hours</div>
+            <div class="l">of manual searching, downloading, and re-uploading</div>
           </div>
         </div>
       </div>
@@ -1252,304 +432,141 @@
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════
-     THE PROBLEM
-══════════════════════════════════════════════ -->
+<!-- ═══ THE PROBLEM ═══ -->
 <section id="problem">
   <div class="container">
-    <div class="section-label fade-up">The Problem</div>
-    <h2 class="section-title fade-up delay-1">9 steps. All <em>manual</em>. Every time.</h2>
+    <div class="label fu">The Problem</div>
+    <h2 class="h2 fu d1">9 steps. All <em>manual</em>. Every time.</h2>
+    <p class="sub fu d2">Every single casting goes through this 9-step process. When the client asks for more options — it starts again from step 5.</p>
 
-    <div class="problem-flow fade-up delay-2">
-      <div class="problem-step-card">
-        <div class="pstep-num">01</div>
-        <div class="pstep-title">Actor sends data</div>
-        <div class="pstep-sub">Photos, videos, PDFs via WhatsApp — unstructured</div>
-        <div class="arrow-connector">→</div>
-      </div>
-      <div class="problem-step-card">
-        <div class="pstep-num">02</div>
-        <div class="pstep-title">Agency stores it</div>
-        <div class="pstep-sub">In Drive folders or hard disks. No fixed system.</div>
-        <div class="arrow-connector">→</div>
-      </div>
-      <div class="problem-step-card">
-        <div class="pstep-num">03</div>
-        <div class="pstep-title">Excel sheet</div>
-        <div class="pstep-sub">Name, age, gender — but media is NOT inside Excel</div>
-        <div class="arrow-connector">→</div>
-      </div>
-      <div class="problem-step-card">
-        <div class="pstep-num">04</div>
-        <div class="pstep-title">Brief arrives</div>
-        <div class="pstep-sub">Client sends requirements</div>
-        <div class="arrow-connector">→</div>
-      </div>
-      <div class="problem-step-card">
-        <div class="pstep-num">05</div>
-        <div class="pstep-title">Filter Excel</div>
-        <div class="pstep-sub">Age + gender filters only. Vibe? Luck.</div>
-      </div>
+    <div class="flow-grid fu d2">
+      <div class="fs"><div class="fs-n">01</div><div class="fs-t">Actor sends data</div><div class="fs-s">Photos, videos, PDFs via WhatsApp. Unstructured. No fixed format.</div></div>
+      <div class="fs"><div class="fs-n">02</div><div class="fs-t">Agency stores it</div><div class="fs-s">In Drive folders or hard disks. Different people, different systems.</div></div>
+      <div class="fs"><div class="fs-n">03</div><div class="fs-t">Excel sheet</div><div class="fs-s">Name, age, gender tracked. But media is NOT inside the Excel.</div></div>
+      <div class="fs"><div class="fs-n">04</div><div class="fs-t">Brief arrives</div><div class="fs-s">Client sends requirements. The process begins.</div></div>
+      <div class="fs"><div class="fs-n">05</div><div class="fs-t">Filter Excel</div><div class="fs-s">Age + gender filters only. Vibe? Look? Pure guesswork.</div></div>
+    </div>
+    <div class="flow-grid-b fu d3">
+      <div class="fs bad"><div class="fs-n">06</div><div class="fs-t">Manual folder search</div><div class="fs-s">Hunt through Drive for every matched actor. One by one.</div></div>
+      <div class="fs bad"><div class="fs-n">07</div><div class="fs-t">Download files</div><div class="fs-s">Download photos and videos manually. Repeat 15–20 times.</div></div>
+      <div class="fs bad"><div class="fs-n">08</div><div class="fs-t">Re-upload & send</div><div class="fs-s">Build PPT or Drive folder. Send via WhatsApp to client.</div></div>
+      <div class="fs bad" style="border-right:1px solid rgba(232,69,90,.2)"><div class="fs-n">09</div><div class="fs-t">Client says "more" → repeat 5–8</div><div class="fs-s">Every iteration = full manual rework. No state saved anywhere.</div></div>
     </div>
 
-    <div class="problem-row-2 fade-up delay-3" style="margin-top:0; border-top: none;">
-      <div class="problem-step-card danger" style="border-radius:0 0 0 10px; margin-top:0; border-top:none;">
-        <div class="pstep-num">06</div>
-        <div class="pstep-title">Manual folder search</div>
-        <div class="pstep-sub">For every actor that matched — find their folder, find the right file</div>
-        <div class="arrow-connector">→</div>
-      </div>
-      <div class="problem-step-card danger" style="border-top:none; margin-top:0;">
-        <div class="pstep-num">07</div>
-        <div class="pstep-title">Download files</div>
-        <div class="pstep-sub">One by one. Repeat for 15–20 actors.</div>
-        <div class="arrow-connector">→</div>
-      </div>
-      <div class="problem-step-card danger" style="border-top:none; margin-top:0;">
-        <div class="pstep-num">08</div>
-        <div class="pstep-title">Re-upload & send</div>
-        <div class="pstep-sub">Build a PPT or Drive folder. Send via WhatsApp.</div>
-        <div class="arrow-connector">→</div>
-      </div>
-      <div class="problem-step-card danger" style="border-radius:0 0 10px 0; border-top:none; margin-top:0; border-right:1px solid var(--red-border);">
-        <div class="pstep-num">09</div>
-        <div class="pstep-title">Client says "more" →<br>repeat steps 5–8</div>
-        <div class="pstep-sub">Every iteration = full manual rework</div>
-      </div>
-    </div>
-
-    <div class="pain-cards fade-up delay-4">
-      <div class="pain-card">
-        <div class="pain-title">Storage Chaos</div>
-        <p class="pain-desc">Thousands of actors, each with multiple files — photos, videos, PDFs — scattered across different Drive folders, hard disks, and WhatsApp chats. No structure, no single place.</p>
-      </div>
-      <div class="pain-card">
-        <div class="pain-title">Three-Tool Nightmare</div>
-        <p class="pain-desc">Excel for data. Drive for files. WhatsApp for sending. Three separate tools that don't talk to each other, stitched together by human memory and manual effort.</p>
-      </div>
-      <div class="pain-card">
-        <div class="pain-title">Iteration = Start Over</div>
-        <p class="pain-desc">Every time the client says "send more options" or "make it younger," the agency redoes the entire process from scratch. There is no state saved anywhere.</p>
-      </div>
-      <div class="pain-card">
-        <div class="pain-title">4 Hours. Every Casting.</div>
-        <p class="pain-desc">One brief can take 3–4 hours end to end. A casting agency handles multiple briefs per week. This is dozens of hours of pure manual overhead — that's the business we're fixing.</p>
-      </div>
+    <div class="pain-grid fu d3">
+      <div class="pain"><div class="pain-t">Storage Chaos</div><p class="pain-d">Thousands of actors, each with multiple files — photos, videos, PDFs — scattered across different Drive folders, hard disks, and WhatsApp chats. No structure, no single place to look.</p></div>
+      <div class="pain"><div class="pain-t">Three-Tool Nightmare</div><p class="pain-d">Excel for data. Drive for files. WhatsApp for sending. Three separate tools that don't talk to each other, stitched together by human memory and manual copy-paste.</p></div>
+      <div class="pain"><div class="pain-t">Iteration = Start Over</div><p class="pain-d">Every time the client says "send more" or "make it younger," the agency redoes the entire process from scratch. There is no saved state, no shortcut. Pure repetition.</p></div>
+      <div class="pain"><div class="pain-t">4 Hours. Every Casting.</div><p class="pain-d">One brief can consume 3–4 hours end to end. Agencies handle multiple briefs per week. This is dozens of hours of pure manual overhead — exactly the business ARC eliminates.</p></div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════
-     THE SOLUTION
-══════════════════════════════════════════════ -->
-<section id="solution">
+<!-- ═══ SOLUTION ═══ -->
+<section id="solution" class="alt">
   <div class="container">
-    <div class="section-label fade-up">The Solution</div>
-    <h2 class="section-title fade-up delay-1"><em>Search → Select → Generate → Send.</em><br>That's it.</h2>
-    <p class="fade-up delay-2" style="color:var(--muted2); font-size:15px; max-width:600px; margin-bottom:0; line-height:1.8;">
-      ARC replaces the entire Excel + Drive + WhatsApp stack with one system. Think of it as <strong style="color:var(--white)">Google Search for actors + an automatic deck maker</strong>.
-    </p>
+    <div class="label fu">The Solution</div>
+    <h2 class="h2 fu d1"><em>Search → Select → Generate → Send.</em></h2>
+    <p class="sub fu d2">ARC replaces the entire Excel + Drive + WhatsApp stack with one system. Think of it as Google Search for actors + an automatic deck maker.</p>
 
-    <div class="vs-grid fade-up delay-2">
+    <div class="vs fu d2">
       <div class="vs-col">
-        <div class="vs-col-header before">BEFORE — TODAY</div>
-        <div class="vs-items">
-          <div class="vs-item"><span class="vs-item-icon vs-x">✕</span> Actor data arrives unstructured via WhatsApp</div>
-          <div class="vs-item"><span class="vs-item-icon vs-x">✕</span> Files scattered across Drive and hard disks</div>
-          <div class="vs-item"><span class="vs-item-icon vs-x">✕</span> Excel manages data; media lives elsewhere</div>
-          <div class="vs-item"><span class="vs-item-icon vs-x">✕</span> Manual folder hunt for every matching actor</div>
-          <div class="vs-item"><span class="vs-item-icon vs-x">✕</span> Download → Re-upload → Build PPT manually</div>
-          <div class="vs-item"><span class="vs-item-icon vs-x">✕</span> Client feedback = redo everything from scratch</div>
-          <div class="vs-item"><span class="vs-item-icon vs-x">✕</span> 3–4 hours per casting brief</div>
-        </div>
+        <div class="vs-head b">BEFORE — TODAY</div>
+        <div class="vs-item"><span class="vi-x">✕</span> Actor data arrives unstructured via WhatsApp</div>
+        <div class="vs-item"><span class="vi-x">✕</span> Files scattered across Drive and hard disks</div>
+        <div class="vs-item"><span class="vi-x">✕</span> Excel for data; media lives separately, forever disconnected</div>
+        <div class="vs-item"><span class="vi-x">✕</span> Manual folder hunt per matched actor</div>
+        <div class="vs-item"><span class="vi-x">✕</span> Download → Re-upload → Build PPT by hand</div>
+        <div class="vs-item"><span class="vi-x">✕</span> Client feedback = redo everything from scratch</div>
+        <div class="vs-item"><span class="vi-x">✕</span> 3–4 hours per casting brief, every time</div>
       </div>
-
       <div class="vs-arrow">→</div>
-
       <div class="vs-col">
-        <div class="vs-col-header after">AFTER — ARC</div>
-        <div class="vs-items">
-          <div class="vs-item"><span class="vs-item-icon vs-check">✓</span> WhatsApp bot auto-captures and sorts everything</div>
-          <div class="vs-item"><span class="vs-item-icon vs-check">✓</span> Every actor has a hosted profile page</div>
-          <div class="vs-item"><span class="vs-item-icon vs-check">✓</span> Structured database — searchable in seconds</div>
-          <div class="vs-item"><span class="vs-item-icon vs-check">✓</span> Natural language or filter search</div>
-          <div class="vs-item"><span class="vs-item-icon vs-check">✓</span> One click → PDF/PPT deck generated instantly</div>
-          <div class="vs-item"><span class="vs-item-icon vs-check">✓</span> Iteration = update selection + regenerate</div>
-          <div class="vs-item"><span class="vs-item-icon vs-check">✓</span> 10 minutes per casting brief</div>
-        </div>
+        <div class="vs-head a">AFTER — ARC</div>
+        <div class="vs-item"><span class="vi-c">✓</span> WhatsApp bot auto-captures and categorises everything</div>
+        <div class="vs-item"><span class="vi-c">✓</span> Every actor has a hosted profile with all media attached</div>
+        <div class="vs-item"><span class="vi-c">✓</span> Structured database — fully searchable in seconds</div>
+        <div class="vs-item"><span class="vi-c">✓</span> Natural language or filter-based search</div>
+        <div class="vs-item"><span class="vi-c">✓</span> One click → PDF or PPT deck generated instantly</div>
+        <div class="vs-item"><span class="vi-c">✓</span> Iteration = update selection + click generate</div>
+        <div class="vs-item"><span class="vi-c">✓</span> 10 minutes per casting brief</div>
       </div>
     </div>
 
-    <div class="arc-flow fade-up delay-3">
-      <div class="arc-flow-step">
-        <div class="arc-flow-num">01</div>
-        <div class="arc-flow-label">Search</div>
-        <div class="arc-flow-sub">Type brief or use filters</div>
-      </div>
-      <div class="arc-flow-step">
-        <div class="arc-flow-num">02</div>
-        <div class="arc-flow-label">Select</div>
-        <div class="arc-flow-sub">Pick 5–20 matching profiles</div>
-      </div>
-      <div class="arc-flow-step">
-        <div class="arc-flow-num">03</div>
-        <div class="arc-flow-label">Generate</div>
-        <div class="arc-flow-sub">One click → PDF or PPT deck</div>
-      </div>
-      <div class="arc-flow-step">
-        <div class="arc-flow-num">04</div>
-        <div class="arc-flow-label">Send</div>
-        <div class="arc-flow-sub">Share link or file to client</div>
-      </div>
+    <div class="arc-flow fu d3">
+      <div class="afs"><div class="afs-n">01</div><div class="afs-l">Search</div><div class="afs-s">Type brief or use filters</div></div>
+      <div class="afs"><div class="afs-n">02</div><div class="afs-l">Select</div><div class="afs-s">Pick 5–20 matching profiles</div></div>
+      <div class="afs"><div class="afs-n">03</div><div class="afs-l">Generate</div><div class="afs-s">One click → PDF or PPT deck</div></div>
+      <div class="afs"><div class="afs-n">04</div><div class="afs-l">Send</div><div class="afs-s">Share link or file to client</div></div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════
-     HOW IT WORKS (3 PARTS)
-══════════════════════════════════════════════ -->
+<!-- ═══ HOW IT WORKS ═══ -->
 <section id="howitworks">
   <div class="container">
-    <div class="section-label fade-up">Full System</div>
-    <h2 class="section-title fade-up delay-1">How ARC <em>works</em></h2>
-    <p class="fade-up delay-2" style="color:var(--muted2); font-size:15px; max-width:620px; line-height:1.8; margin-bottom:0;">
-      The system has three distinct phases. Each one maps to a real pain point the agency faces today.
-    </p>
+    <div class="label fu">Full System Breakdown</div>
+    <h2 class="h2 fu d1">How ARC <em>works</em></h2>
+    <p class="sub fu d2">Three phases. Each maps to a real pain point the agency faces today.</p>
 
-    <div class="three-phases">
-      <!-- Phase 1 -->
-      <div class="phase-card fade-up delay-1">
-        <div class="phase-header phase-1">
-          <div class="phase-num">1</div>
-          <div class="phase-label">Part 1</div>
-          <div class="phase-title">Data In</div>
-        </div>
-        <div class="phase-steps">
-          <div class="phase-step">
-            <div class="phase-step-dot" style="background:#60A5FA"></div>
-            <div class="phase-step-text">
-              <strong>Actor sends data (same as today)</strong>
-              Photos, videos, PDFs, text — all via WhatsApp. Zero behavior change required from actors.
-            </div>
-          </div>
-          <div class="phase-step">
-            <div class="phase-step-dot" style="background:#60A5FA"></div>
-            <div class="phase-step-text">
-              <strong>Agency forwards to ARC bot</strong>
-              One forward message to the ARC WhatsApp number. That's the only new action.
-            </div>
-          </div>
-          <div class="phase-step">
-            <div class="phase-step-dot" style="background:#60A5FA"></div>
-            <div class="phase-step-text">
-              <strong>ARC receives everything</strong>
-              Images, videos, documents, and unstructured text all land in one pipeline.
-            </div>
-          </div>
+    <div class="phases">
+      <div class="phase ph1 fu d1">
+        <div class="phase-h"><div class="phase-lbl">Part 01</div><div class="phase-t">Data In</div></div>
+        <div class="phase-body">
+          <div class="ps"><div class="ps-dot"></div><div class="ps-t"><strong>Actor sends data (unchanged)</strong>Photos, videos, PDFs, text — all via WhatsApp. Zero behavior change from actors.</div></div>
+          <div class="ps"><div class="ps-dot"></div><div class="ps-t"><strong>Agency forwards to ARC bot</strong>One forward message to the ARC WhatsApp number. That's the only new action required.</div></div>
+          <div class="ps"><div class="ps-dot"></div><div class="ps-t"><strong>ARC receives everything</strong>Images, videos, documents, and raw text all land in one intake pipeline.</div></div>
         </div>
       </div>
-
-      <!-- Phase 2 -->
-      <div class="phase-card fade-up delay-2">
-        <div class="phase-header phase-2">
-          <div class="phase-num">2</div>
-          <div class="phase-label">Part 2</div>
-          <div class="phase-title">Backend Magic</div>
-        </div>
-        <div class="phase-steps">
-          <div class="phase-step">
-            <div class="phase-step-dot" style="background:#22C55E"></div>
-            <div class="phase-step-text">
-              <strong>File classification</strong>
-              System separates photos, videos, and documents automatically.
-            </div>
-          </div>
-          <div class="phase-step">
-            <div class="phase-step-dot" style="background:#22C55E"></div>
-            <div class="phase-step-text">
-              <strong>Data extraction</strong>
-              AI reads text and PDFs to extract name, age, height, skills, and contact info.
-            </div>
-          </div>
-          <div class="phase-step">
-            <div class="phase-step-dot" style="background:#22C55E"></div>
-            <div class="phase-step-text">
-              <strong>Profile created</strong>
-              Each actor gets a structured database entry + a hosted profile page with their media.
-            </div>
-          </div>
+      <div class="phase ph2 fu d2">
+        <div class="phase-h"><div class="phase-lbl">Part 02</div><div class="phase-t">Backend Magic</div></div>
+        <div class="phase-body">
+          <div class="ps"><div class="ps-dot"></div><div class="ps-t"><strong>File classification</strong>System automatically separates photos, videos, and documents.</div></div>
+          <div class="ps"><div class="ps-dot"></div><div class="ps-t"><strong>AI data extraction</strong>Reads text and PDFs to extract name, age, height, skills, contact info.</div></div>
+          <div class="ps"><div class="ps-dot"></div><div class="ps-t"><strong>Structured data + profile</strong>Each actor gets a database entry and a hosted profile page with all their media.</div></div>
         </div>
       </div>
-
-      <!-- Phase 3 -->
-      <div class="phase-card fade-up delay-3">
-        <div class="phase-header phase-3">
-          <div class="phase-num">3</div>
-          <div class="phase-label">Part 3</div>
-          <div class="phase-title">Casting Done</div>
-        </div>
-        <div class="phase-steps">
-          <div class="phase-step">
-            <div class="phase-step-dot" style="background:#E8455A"></div>
-            <div class="phase-step-text">
-              <strong>Brief enters ARC</strong>
-              Agency types naturally ("male, 25–30, urban") or uses filter UI.
-            </div>
-          </div>
-          <div class="phase-step">
-            <div class="phase-step-dot" style="background:#E8455A"></div>
-            <div class="phase-step-text">
-              <strong>Search + Select</strong>
-              ARC shows matching profiles. Agent picks 5–20. Removes or adds easily.
-            </div>
-          </div>
-          <div class="phase-step">
-            <div class="phase-step-dot" style="background:#E8455A"></div>
-            <div class="phase-step-text">
-              <strong>Generate + Send</strong>
-              One click → PDF or PPT deck with photos, names, details. Share as link or file.
-            </div>
-          </div>
-          <div class="phase-step">
-            <div class="phase-step-dot" style="background:#E8455A"></div>
-            <div class="phase-step-text">
-              <strong>Iteration = 30 seconds</strong>
-              Client says "more"? Change selection, click generate. No repeat work.
-            </div>
-          </div>
+      <div class="phase ph3 fu d3">
+        <div class="phase-h"><div class="phase-lbl">Part 03</div><div class="phase-t">Casting Done</div></div>
+        <div class="phase-body">
+          <div class="ps"><div class="ps-dot"></div><div class="ps-t"><strong>Brief enters ARC</strong>Agency types naturally ("male, 25–30, urban") or uses filter UI.</div></div>
+          <div class="ps"><div class="ps-dot"></div><div class="ps-t"><strong>Search + Select</strong>ARC shows matching profiles. Agent picks 5–20. Removes or adds easily.</div></div>
+          <div class="ps"><div class="ps-dot"></div><div class="ps-t"><strong>Generate + Send</strong>One click → PDF or PPT deck. Send as link or file to client.</div></div>
+          <div class="ps"><div class="ps-dot"></div><div class="ps-t"><strong>Iteration = 30 seconds</strong>Client says "more"? Change selection, click generate. No rework. Zero.</div></div>
         </div>
       </div>
     </div>
 
     <!-- Actor Types -->
-    <div style="margin-top:3rem;">
-      <div class="section-label fade-up" style="margin-bottom:12px;">Actor Tiers</div>
-      <h3 style="font-family:var(--font-display); font-size:32px; color:var(--white); margin-bottom:1.5rem;" class="fade-up delay-1">Two types of actors in the system</h3>
-      <div class="actor-types-grid">
-        <div class="actor-type-card paid fade-up delay-2">
-          <span class="actor-badge paid">● Paid Actor</span>
-          <div class="actor-type-title">Premium Profile</div>
-          <ul class="actor-features">
-            <li><span>✓</span> Own hosted profile page (public URL)</li>
-            <li><span>✓</span> Can edit and update their profile</li>
-            <li><span>✓</span> Can share profile link directly</li>
-            <li><span>✓</span> Appears prominently in search results</li>
-            <li><span>✓</span> Directly monetizes ARC's actor-side</li>
+    <div style="margin-top:3.5rem">
+      <div class="label fu" style="margin-bottom:12px">Actor Tiers</div>
+      <h3 class="fu d1" style="font-family:var(--fd);font-size:30px;color:var(--white);letter-spacing:1px;margin-bottom:8px">Two types of actors in the system</h3>
+      <p class="fu d2" style="color:var(--t2);font-size:14px;max-width:540px;line-height:1.75;margin-bottom:0">Free actors build database volume. Paid actors monetize the supply side. Both make ARC more useful for agencies.</p>
+      <div class="actor-grid">
+        <div class="ac paid fu d2">
+          <span class="ac-badge p">● Paid Actor</span>
+          <div class="ac-title">Premium Profile</div>
+          <ul class="ac-list">
+            <li><span style="color:var(--green)">✓</span> Own hosted public profile URL</li>
+            <li><span style="color:var(--green)">✓</span> Can edit bio, photos, videos, skills</li>
+            <li><span style="color:var(--green)">✓</span> Shareable link — give to any agency</li>
+            <li><span style="color:var(--green)">✓</span> Prioritised in search results</li>
+            <li><span style="color:var(--green)">✓</span> Directly generates revenue for ARC</li>
           </ul>
-          <div class="actor-price">₹500 – ₹999 / month</div>
+          <div class="ac-price">₹500 – ₹999 / month</div>
         </div>
-        <div class="actor-type-card free fade-up delay-3">
-          <span class="actor-badge free">○ Free Actor</span>
-          <div class="actor-type-title">Internal Profile</div>
-          <ul class="actor-features">
-            <li><span style="color:var(--muted)">–</span> No direct access to their profile</li>
-            <li><span style="color:var(--muted)">–</span> Used only inside ARC by agencies</li>
-            <li><span style="color:var(--muted)">–</span> Cannot edit or view their listing</li>
-            <li><span>✓</span> Still searchable and usable in casting</li>
-            <li><span>✓</span> Grows the database depth for agencies</li>
+        <div class="ac free fu d3">
+          <span class="ac-badge f">○ Free Actor</span>
+          <div class="ac-title">Internal Profile</div>
+          <ul class="ac-list">
+            <li><span style="color:var(--t3)">–</span> No access to their own profile</li>
+            <li><span style="color:var(--t3)">–</span> Used only inside ARC by agencies</li>
+            <li><span style="color:var(--t3)">–</span> Cannot edit or view their listing</li>
+            <li><span style="color:var(--green)">✓</span> Still fully searchable in casting</li>
+            <li><span style="color:var(--green)">✓</span> Grows database depth for agencies</li>
           </ul>
-          <div style="margin-top:20px; padding:12px 16px; background:rgba(255,255,255,0.04); border:1px solid var(--border); border-radius:8px; font-size:13px; color:var(--muted2);">
-            Free tier builds database volume → makes ARC more valuable to agencies → drives upgrades
+          <div style="margin-top:18px;padding:11px 14px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;font-size:12px;color:var(--t2);line-height:1.6">
+            Free tier builds volume → makes ARC more valuable → drives upgrades
           </div>
         </div>
       </div>
@@ -1557,497 +574,271 @@
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════
-     PRODUCT · SERVICE · PROCESS
-══════════════════════════════════════════════ -->
-<section id="product" style="padding-top: 60px; padding-bottom: 100px;">
+<!-- ═══ PRODUCT / SERVICE / PROCESS ═══ -->
+<section class="alt" style="padding-top:70px;padding-bottom:80px">
   <div class="container">
-    <div class="section-label fade-up">What We're Building</div>
-    <h2 class="section-title fade-up delay-1">Product. Service. <em>Process.</em></h2>
-    <div class="pvc-grid">
-      <div class="pvc-card fade-up delay-1">
-        <div class="pvc-icon product">🧱</div>
-        <div class="pvc-type">Software</div>
-        <div class="pvc-title">Product</div>
-        <ul class="pvc-list">
-          <li>Dashboard for agencies</li>
+    <div class="label fu">What We're Building</div>
+    <h2 class="h2 fu d1">Product. Service. <em>Process.</em></h2>
+    <div class="psp-grid">
+      <div class="psp fu d1">
+        <div class="psp-icon p1">🧱</div>
+        <div class="psp-lbl">Software</div>
+        <div class="psp-t">Product</div>
+        <ul class="psp-list">
+          <li>Agency dashboard</li>
           <li>Actor profile pages</li>
-          <li>Search & filter system</li>
+          <li>Search &amp; filter system</li>
           <li>Deck generator (PDF/PPT)</li>
           <li>WhatsApp intake bot</li>
         </ul>
       </div>
-      <div class="pvc-card fade-up delay-2">
-        <div class="pvc-icon service">🤝</div>
-        <div class="pvc-type">Human Work</div>
-        <div class="pvc-title">Service</div>
-        <ul class="pvc-list">
+      <div class="psp fu d2">
+        <div class="psp-icon p2">🤝</div>
+        <div class="psp-lbl">Human Work</div>
+        <div class="psp-t">Service</div>
+        <ul class="psp-list">
           <li>Calling actors for consent</li>
           <li>Data quality checks</li>
-          <li>Onboarding agencies</li>
+          <li>Agency onboarding</li>
           <li>Edge case data cleaning</li>
           <li>Customer support</li>
         </ul>
       </div>
-      <div class="pvc-card fade-up delay-3">
-        <div class="pvc-icon process">⚙️</div>
-        <div class="pvc-type">The Flow</div>
-        <div class="pvc-title">Process</div>
-        <ul class="pvc-list">
+      <div class="psp fu d3">
+        <div class="psp-icon p3">⚙️</div>
+        <div class="psp-lbl">The Flow</div>
+        <div class="psp-t">Process</div>
+        <ul class="psp-list">
           <li>Input: WhatsApp</li>
           <li>Process: Organize + structure</li>
           <li>Output: Casting deck</li>
           <li>Loop: Iteration without rework</li>
-          <li>Scale: More actors → better results</li>
+          <li>Scale: More actors = better results</li>
         </ul>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════
-     TECH ARCHITECTURE
-══════════════════════════════════════════════ -->
+<!-- ═══ TECH ARCHITECTURE ═══ -->
 <section id="tech">
   <div class="container">
-    <div class="section-label fade-up">For the Tech Co-Founder</div>
-    <h2 class="section-title fade-up delay-1">What we need to <em>build</em></h2>
-    <p class="fade-up delay-2" style="color:var(--muted2); font-size:15px; max-width:600px; line-height:1.8; margin-bottom:0;">
-      Three technical pipelines. Each maps directly to a product phase. Stack decisions are open — this is the scope of work, not a blueprint.
-    </p>
+    <div class="label fu">For the Tech Co-Founder</div>
+    <h2 class="h2 fu d1">What we need to <em>build</em></h2>
+    <p class="sub fu d2">Three technical pipelines. Stack decisions are open — this is the scope, not a blueprint. You own the architecture.</p>
 
     <div class="tech-grid">
-      <div class="tech-card fade-up delay-1">
-        <div class="tech-card-header tech-phase-1">
-          <div class="tech-phase-num">PHASE 01</div>
-          <div class="tech-phase-title">Ingestion</div>
-          <div class="tech-phase-sub">Getting data into the system</div>
-        </div>
-        <div class="tech-items">
-          <div class="tech-item">
-            <div class="tech-bullet" style="background:#60A5FA"></div>
-            <div>
-              <div class="tech-item-label">WhatsApp Business API</div>
-              <div class="tech-item-detail">Meta Cloud API or Twilio</div>
-            </div>
-          </div>
-          <div class="tech-item">
-            <div class="tech-bullet" style="background:#60A5FA"></div>
-            <div>
-              <div class="tech-item-label">Media classifier</div>
-              <div class="tech-item-detail">Sort image / video / document</div>
-            </div>
-          </div>
-          <div class="tech-item">
-            <div class="tech-bullet" style="background:#60A5FA"></div>
-            <div>
-              <div class="tech-item-label">OCR + text extraction</div>
-              <div class="tech-item-detail">Tesseract, Google Vision, or Claude</div>
-            </div>
-          </div>
-          <div class="tech-item">
-            <div class="tech-bullet" style="background:#60A5FA"></div>
-            <div>
-              <div class="tech-item-label">PDF parser</div>
-              <div class="tech-item-detail">PyMuPDF or pdfplumber</div>
-            </div>
-          </div>
-          <div class="tech-item">
-            <div class="tech-bullet" style="background:#60A5FA"></div>
-            <div>
-              <div class="tech-item-label">Media storage</div>
-              <div class="tech-item-detail">S3 or Cloudflare R2 (CDN)</div>
-            </div>
-          </div>
-        </div>
+      <div class="tc t1 fu d1">
+        <div class="tc-head"><div class="tc-phase">PHASE 01</div><div class="tc-title">Ingestion</div><div class="tc-sub">Getting data into the system</div></div>
+        <div class="ti"><div class="ti-dot" style="background:#60a5fa"></div><div><div class="ti-l">WhatsApp Business API</div><div class="ti-s">Meta Cloud API or Twilio</div></div></div>
+        <div class="ti"><div class="ti-dot" style="background:#60a5fa"></div><div><div class="ti-l">Media classifier</div><div class="ti-s">Auto-sort image / video / document</div></div></div>
+        <div class="ti"><div class="ti-dot" style="background:#60a5fa"></div><div><div class="ti-l">OCR + text extraction</div><div class="ti-s">Tesseract / Google Vision / Claude</div></div></div>
+        <div class="ti"><div class="ti-dot" style="background:#60a5fa"></div><div><div class="ti-l">PDF parser</div><div class="ti-s">PyMuPDF or pdfplumber</div></div></div>
+        <div class="ti"><div class="ti-dot" style="background:#60a5fa"></div><div><div class="ti-l">Media storage</div><div class="ti-s">S3 or Cloudflare R2 with CDN</div></div></div>
       </div>
-
-      <div class="tech-card fade-up delay-2">
-        <div class="tech-card-header tech-phase-2">
-          <div class="tech-phase-num">PHASE 02</div>
-          <div class="tech-phase-title">Processing</div>
-          <div class="tech-phase-sub">Structuring and storing data</div>
-        </div>
-        <div class="tech-items">
-          <div class="tech-item">
-            <div class="tech-bullet" style="background:#22C55E"></div>
-            <div>
-              <div class="tech-item-label">AI data extraction</div>
-              <div class="tech-item-detail">LLM API to pull name/age/height/skills</div>
-            </div>
-          </div>
-          <div class="tech-item">
-            <div class="tech-bullet" style="background:#22C55E"></div>
-            <div>
-              <div class="tech-item-label">Actor profile DB</div>
-              <div class="tech-item-detail">PostgreSQL or MongoDB</div>
-            </div>
-          </div>
-          <div class="tech-item">
-            <div class="tech-bullet" style="background:#22C55E"></div>
-            <div>
-              <div class="tech-item-label">Profile page generation</div>
-              <div class="tech-item-detail">Next.js SSR / static pages per actor</div>
-            </div>
-          </div>
-          <div class="tech-item">
-            <div class="tech-bullet" style="background:#22C55E"></div>
-            <div>
-              <div class="tech-item-label">Image optimization</div>
-              <div class="tech-item-detail">Sharp + CDN delivery for fast previews</div>
-            </div>
-          </div>
-          <div class="tech-item">
-            <div class="tech-bullet" style="background:#22C55E"></div>
-            <div>
-              <div class="tech-item-label">Deduplication logic</div>
-              <div class="tech-item-detail">Fuzzy match to avoid duplicate actor entries</div>
-            </div>
-          </div>
-        </div>
+      <div class="tc t2 fu d2">
+        <div class="tc-head"><div class="tc-phase">PHASE 02</div><div class="tc-title">Processing</div><div class="tc-sub">Structuring and storing data</div></div>
+        <div class="ti"><div class="ti-dot" style="background:var(--green)"></div><div><div class="ti-l">AI data extraction</div><div class="ti-s">LLM API → name / age / height / skills</div></div></div>
+        <div class="ti"><div class="ti-dot" style="background:var(--green)"></div><div><div class="ti-l">Actor profile database</div><div class="ti-s">PostgreSQL or MongoDB</div></div></div>
+        <div class="ti"><div class="ti-dot" style="background:var(--green)"></div><div><div class="ti-l">Profile page generation</div><div class="ti-s">Next.js SSR / static pages per actor</div></div></div>
+        <div class="ti"><div class="ti-dot" style="background:var(--green)"></div><div><div class="ti-l">Image optimisation</div><div class="ti-s">Sharp + CDN for fast previews</div></div></div>
+        <div class="ti"><div class="ti-dot" style="background:var(--green)"></div><div><div class="ti-l">Deduplication</div><div class="ti-s">Fuzzy match to avoid duplicate entries</div></div></div>
       </div>
-
-      <div class="tech-card fade-up delay-3">
-        <div class="tech-card-header tech-phase-3">
-          <div class="tech-phase-num">PHASE 03</div>
-          <div class="tech-phase-title">Delivery</div>
-          <div class="tech-phase-sub">The actual casting workflow</div>
-        </div>
-        <div class="tech-items">
-          <div class="tech-item">
-            <div class="tech-bullet" style="background:#E8455A"></div>
-            <div>
-              <div class="tech-item-label">Brief parser</div>
-              <div class="tech-item-detail">NLP / LLM to extract filters from natural language</div>
-            </div>
-          </div>
-          <div class="tech-item">
-            <div class="tech-bullet" style="background:#E8455A"></div>
-            <div>
-              <div class="tech-item-label">Search engine</div>
-              <div class="tech-item-detail">Postgres full-text, Elastic, or vector (Pinecone)</div>
-            </div>
-          </div>
-          <div class="tech-item">
-            <div class="tech-bullet" style="background:#E8455A"></div>
-            <div>
-              <div class="tech-item-label">Agency dashboard</div>
-              <div class="tech-item-detail">React / Next.js — search, select, manage</div>
-            </div>
-          </div>
-          <div class="tech-item">
-            <div class="tech-bullet" style="background:#E8455A"></div>
-            <div>
-              <div class="tech-item-label">Deck generator</div>
-              <div class="tech-item-detail">PDFKit / pptxgenjs + photo layout engine</div>
-            </div>
-          </div>
-          <div class="tech-item">
-            <div class="tech-bullet" style="background:#E8455A"></div>
-            <div>
-              <div class="tech-item-label">Share system</div>
-              <div class="tech-item-detail">Signed URLs or downloadable PDFs</div>
-            </div>
-          </div>
-        </div>
+      <div class="tc t3 fu d3">
+        <div class="tc-head"><div class="tc-phase">PHASE 03</div><div class="tc-title">Delivery</div><div class="tc-sub">The actual casting workflow</div></div>
+        <div class="ti"><div class="ti-dot" style="background:var(--red)"></div><div><div class="ti-l">Brief parser</div><div class="ti-s">LLM to extract filters from natural language</div></div></div>
+        <div class="ti"><div class="ti-dot" style="background:var(--red)"></div><div><div class="ti-l">Search engine</div><div class="ti-s">Postgres FTS, Elastic, or Pinecone</div></div></div>
+        <div class="ti"><div class="ti-dot" style="background:var(--red)"></div><div><div class="ti-l">Agency dashboard</div><div class="ti-s">React / Next.js — search, select, manage</div></div></div>
+        <div class="ti"><div class="ti-dot" style="background:var(--red)"></div><div><div class="ti-l">Deck generator</div><div class="ti-s">PDFKit / pptxgenjs + photo layout engine</div></div></div>
+        <div class="ti"><div class="ti-dot" style="background:var(--red)"></div><div><div class="ti-l">Share system</div><div class="ti-s">Signed URLs or downloadable PDFs</div></div></div>
       </div>
     </div>
 
-    <div class="tech-stack-bar fade-up delay-3">
-      <span class="tech-stack-label">OPEN STACK</span>
-      <span class="stack-tag open">Node.js / Python</span>
-      <span class="stack-tag open">Next.js</span>
-      <span class="stack-tag open">PostgreSQL</span>
-      <span class="stack-tag open">WhatsApp API</span>
-      <span class="stack-tag open">LLM API (Claude/GPT)</span>
-      <span class="stack-tag open">S3 / R2</span>
-      <span class="stack-tag open">Redis (queue)</span>
-      <span class="stack-tag">These are suggestions, not decisions — you choose.</span>
+    <div class="stack-row fu d4">
+      <span class="sl">OPEN STACK —</span>
+      <span class="stag open">Node.js / Python</span>
+      <span class="stag open">Next.js</span>
+      <span class="stag open">PostgreSQL</span>
+      <span class="stag open">WhatsApp API</span>
+      <span class="stag open">LLM API</span>
+      <span class="stag open">S3 / R2</span>
+      <span class="stag open">Redis (queue)</span>
+      <span class="stag" style="margin-left:8px">These are suggestions — you choose the stack.</span>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════
-     COMPETITORS
-══════════════════════════════════════════════ -->
-<section id="competitors">
+<!-- ═══ COMPETITORS ═══ -->
+<section id="competitors" class="alt">
   <div class="container">
-    <div class="section-label fade-up">Market Position</div>
-    <h2 class="section-title fade-up delay-1">No one owns this <em>problem</em></h2>
-    <p class="fade-up delay-2" style="color:var(--muted2); font-size:15px; max-width:620px; line-height:1.8; margin-bottom:0;">
-      Existing platforms are talent marketplaces. They connect actors to opportunities. ARC is infrastructure — it helps agencies complete the casting once they already have the talent.
-    </p>
+    <div class="label fu">Market Position</div>
+    <h2 class="h2 fu d1">No one owns this <em>problem</em></h2>
+    <p class="sub fu d2">Existing platforms are talent marketplaces. They connect actors to opportunities. ARC is infrastructure — it helps agencies complete the casting they already have.</p>
 
-    <div class="fade-up delay-2">
-      <table class="comp-table">
+    <div class="comp-wrap fu d2">
+      <table>
         <thead>
           <tr>
-            <th>Platform</th>
-            <th>Focus</th>
-            <th>Primary User</th>
-            <th>Fixes Agency Workflow</th>
-            <th>Deck Generator</th>
-            <th>Handles Iterations</th>
-            <th>Structured Data</th>
+            <th>Platform</th><th>Focus</th><th>Primary User</th>
+            <th>Fixes Workflow</th><th>Deck Gen</th><th>Handles Iterations</th><th>Structured Data</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Talentrack</td>
-            <td>Talent discovery</td>
-            <td>Actors</td>
-            <td class="no">No</td>
-            <td class="no">No</td>
-            <td class="no">No</td>
-            <td class="no">No</td>
-          </tr>
-          <tr>
-            <td>Dazzlerr</td>
-            <td>Actor profiles</td>
-            <td>Actors</td>
-            <td class="no">No</td>
-            <td class="no">No</td>
-            <td class="no">No</td>
-            <td class="no">No</td>
-          </tr>
-          <tr>
-            <td>Castkro</td>
-            <td>Audition listings</td>
-            <td>Both</td>
-            <td class="no">No</td>
-            <td class="no">No</td>
-            <td class="no">No</td>
-            <td class="no">No</td>
-          </tr>
-          <tr>
-            <td>Google Drive + Excel</td>
-            <td>Generic storage</td>
-            <td>Agencies (today)</td>
-            <td class="no">No</td>
-            <td class="no">No</td>
-            <td class="no">No</td>
-            <td class="no">No</td>
-          </tr>
-          <tr class="arc-row">
-            <td>ARC ✦</td>
-            <td>Casting execution</td>
-            <td>Agencies</td>
-            <td class="yes">Yes</td>
-            <td class="yes">Yes</td>
-            <td class="yes">Yes</td>
-            <td class="yes">Yes</td>
-          </tr>
+          <tr><td>Talentrack</td><td>Talent discovery</td><td>Actors</td><td class="no">No</td><td class="no">No</td><td class="no">No</td><td class="no">No</td></tr>
+          <tr><td>Dazzlerr</td><td>Actor profiles</td><td>Actors</td><td class="no">No</td><td class="no">No</td><td class="no">No</td><td class="no">No</td></tr>
+          <tr><td>Castkro</td><td>Audition listings</td><td>Both</td><td class="no">No</td><td class="no">No</td><td class="no">No</td><td class="no">No</td></tr>
+          <tr><td>Google Drive + Excel</td><td>Generic storage</td><td>Agencies (today)</td><td class="no">No</td><td class="no">No</td><td class="no">No</td><td class="no">No</td></tr>
+          <tr class="arc-row"><td>ARC ✦</td><td>Casting execution infra</td><td>Agencies</td><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
         </tbody>
       </table>
     </div>
 
-    <div class="comp-key fade-up delay-3">
-      <div class="comp-key-item">
-        <div class="comp-key-aspect">Focus</div>
-        <div class="comp-key-them">Talent discovery</div>
-        <div class="comp-key-divider"></div>
-        <div class="comp-key-arc">Casting execution</div>
-      </div>
-      <div class="comp-key-item">
-        <div class="comp-key-aspect">Primary User</div>
-        <div class="comp-key-them">Actors</div>
-        <div class="comp-key-divider"></div>
-        <div class="comp-key-arc">Casting agencies</div>
-      </div>
-      <div class="comp-key-item">
-        <div class="comp-key-aspect">System Type</div>
-        <div class="comp-key-them">Marketplace</div>
-        <div class="comp-key-divider"></div>
-        <div class="comp-key-arc">Infrastructure</div>
-      </div>
-      <div class="comp-key-item">
-        <div class="comp-key-aspect">Workflow</div>
-        <div class="comp-key-them">External hiring</div>
-        <div class="comp-key-divider"></div>
-        <div class="comp-key-arc">Internal processing</div>
-      </div>
-      <div class="comp-key-item">
-        <div class="comp-key-aspect">Data</div>
-        <div class="comp-key-them">User-uploaded</div>
-        <div class="comp-key-divider"></div>
-        <div class="comp-key-arc">Structured & controlled</div>
-      </div>
+    <div class="comp-diff fu d3">
+      <div class="cd"><div class="cd-asp">Focus</div><div class="cd-them">Talent discovery</div><div class="cd-div"></div><div class="cd-arc">Casting execution</div></div>
+      <div class="cd"><div class="cd-asp">Primary User</div><div class="cd-them">Actors</div><div class="cd-div"></div><div class="cd-arc">Casting agencies</div></div>
+      <div class="cd"><div class="cd-asp">System Type</div><div class="cd-them">Marketplace</div><div class="cd-div"></div><div class="cd-arc">Infrastructure</div></div>
+      <div class="cd"><div class="cd-asp">Workflow</div><div class="cd-them">External hiring</div><div class="cd-div"></div><div class="cd-arc">Internal processing</div></div>
+      <div class="cd"><div class="cd-asp">Data Control</div><div class="cd-them">User-uploaded</div><div class="cd-div"></div><div class="cd-arc">Structured &amp; controlled</div></div>
     </div>
 
-    <div class="positioning-box fade-up delay-4">
+    <div class="pos-box fu d4">
       <p>"Other platforms help you <span>find</span> actors. ARC helps you <span>complete</span> the casting."</p>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════
-     BUSINESS MODEL
-══════════════════════════════════════════════ -->
+<!-- ═══ BUSINESS MODEL ═══ -->
 <section id="business">
   <div class="container">
-    <div class="section-label fade-up">How We Make Money</div>
-    <h2 class="section-title fade-up delay-1">Actors pay. Agencies <em>win</em>.</h2>
-    <p class="fade-up delay-2" style="color:var(--muted2); font-size:15px; max-width:600px; line-height:1.8; margin-bottom:0;">
-      Actors are the supply side and the revenue source. Agencies are the demand side and the product users. ARC sits in the middle.
-    </p>
+    <div class="label fu">How We Make Money</div>
+    <h2 class="h2 fu d1">Actors pay. Agencies <em>win</em>.</h2>
+    <p class="sub fu d2">Actors are the supply side and the revenue source. Agencies are the demand side and the product users. ARC monetises the supply to fund the infra that serves the demand.</p>
 
     <div class="biz-grid">
-      <div class="biz-card primary fade-up delay-2">
-        <div class="biz-label">Revenue Stream 1</div>
-        <div class="biz-title">Actor Subscriptions</div>
+      <div class="biz primary fu d2">
+        <div class="biz-lbl">Revenue Stream 1 — Live at Launch</div>
+        <div class="biz-t">Actor Subscriptions</div>
         <div class="biz-price">₹500–₹999</div>
-        <div class="biz-price-note">per actor / month — for owning their profile page</div>
-        <ul class="biz-features">
-          <li><span style="color:var(--green)">✓</span> Actor gets a hosted public profile URL</li>
+        <div class="biz-note">per actor / month — for owning their profile page</div>
+        <ul class="biz-list">
+          <li><span style="color:var(--green)">✓</span> Hosted public profile URL</li>
           <li><span style="color:var(--green)">✓</span> Editable bio, photos, videos, skills</li>
-          <li><span style="color:var(--green)">✓</span> Shareable link — can give to any agency</li>
+          <li><span style="color:var(--green)">✓</span> Shareable link for any agency or client</li>
           <li><span style="color:var(--green)">✓</span> Appears in ARC search results</li>
-          <li><span style="color:var(--muted)">–</span> Free actors exist but without profile access</li>
+          <li><span style="color:var(--t3)">–</span> Free actors exist but without profile access</li>
         </ul>
       </div>
-
-      <div class="biz-card fade-up delay-3">
-        <div class="biz-label">Revenue Stream 2 (Future)</div>
-        <div class="biz-title">Agency Licensing</div>
-        <div class="biz-price" style="color:#60A5FA;">₹X,XXX</div>
-        <div class="biz-price-note">per agency / month — SaaS dashboard access</div>
-        <ul class="biz-features">
-          <li><span style="color:var(--green)">✓</span> Full dashboard access</li>
+      <div class="biz fu d3">
+        <div class="biz-lbl">Revenue Stream 2 — Phase 2</div>
+        <div class="biz-t">Agency SaaS</div>
+        <div class="biz-price blue">₹X,XXX</div>
+        <div class="biz-note">per agency / month — full dashboard &amp; unlimited usage</div>
+        <ul class="biz-list">
+          <li><span style="color:var(--green)">✓</span> Full dashboard access for team</li>
           <li><span style="color:var(--green)">✓</span> Unlimited deck generation</li>
           <li><span style="color:var(--green)">✓</span> Private actor database management</li>
-          <li><span style="color:var(--green)">✓</span> Client sharing & link management</li>
-          <li><span style="color:var(--muted)">–</span> Phase 2 once product-market fit is clear</li>
+          <li><span style="color:var(--green)">✓</span> Client link sharing &amp; tracking</li>
+          <li><span style="color:var(--t3)">–</span> After product-market fit is confirmed</li>
         </ul>
       </div>
     </div>
 
-    <!-- Growth Loop -->
-    <div class="growth-loop fade-up delay-3">
-      <div class="loop-title">THE GROWTH LOOP</div>
-      <p style="color:var(--muted2); font-size:14px; margin-bottom:20px;">A classic supply-demand flywheel. Each side makes the other more valuable.</p>
+    <div class="loop-box fu d3">
+      <div class="loop-title">THE GROWTH FLYWHEEL</div>
+      <p class="loop-sub">A supply-demand flywheel. Each side makes the other more valuable.</p>
       <div class="loop-nodes">
-        <div class="loop-node">
-          <div class="loop-node-label">More Actors Sign Up</div>
-          <div class="loop-node-sub">Pay ₹500–999/mo for profile</div>
-        </div>
-        <div class="loop-arrow">→</div>
-        <div class="loop-node">
-          <div class="loop-node-label">Richer Database</div>
-          <div class="loop-node-sub">More variety, better search</div>
-        </div>
-        <div class="loop-arrow">→</div>
-        <div class="loop-node">
-          <div class="loop-node-label">More Agencies Use ARC</div>
-          <div class="loop-node-sub">Better casting outcomes</div>
-        </div>
-        <div class="loop-arrow">→</div>
-        <div class="loop-node">
-          <div class="loop-node-label">Actors Want to Be Listed</div>
-          <div class="loop-node-sub">Where agencies are = where actors go</div>
-        </div>
+        <div class="ln"><div class="ln-l">More Actors Sign Up</div><div class="ln-s">Pay ₹500–999/mo for profile</div></div>
+        <div class="la">→</div>
+        <div class="ln"><div class="ln-l">Richer Database</div><div class="ln-s">More variety, better search</div></div>
+        <div class="la">→</div>
+        <div class="ln"><div class="ln-l">More Agencies Use ARC</div><div class="ln-s">Better casting outcomes</div></div>
+        <div class="la">→</div>
+        <div class="ln"><div class="ln-l">Actors Want to Be Listed</div><div class="ln-s">Where agencies are = where actors go</div></div>
       </div>
-      <div style="padding:16px 24px; background:var(--bg3); border-radius:8px; display:inline-block; font-size:13px; color:var(--muted2);">
-        Network effect: the more actors in ARC, the more valuable ARC is to agencies — and vice versa.
-      </div>
+      <div class="loop-note">Network effect: more actors → more value for agencies → more agencies → more actors</div>
     </div>
 
-    <!-- Stat bar -->
-    <div class="stat-bar fade-up delay-4">
-      <div class="stat-bar-item">
-        <div class="stat-bar-num">4 hrs</div>
-        <div class="stat-bar-label">current time per casting</div>
-      </div>
-      <div class="stat-bar-item">
-        <div class="stat-bar-num">10 min</div>
-        <div class="stat-bar-label">with ARC</div>
-      </div>
-      <div class="stat-bar-item">
-        <div class="stat-bar-num">₹999</div>
-        <div class="stat-bar-label">max actor subscription</div>
-      </div>
-      <div class="stat-bar-item">
-        <div class="stat-bar-num">0</div>
-        <div class="stat-bar-label">direct competitors solving this</div>
-      </div>
+    <div class="stat-strip fu d4">
+      <div class="ss"><div class="ss-n">4 hrs</div><div class="ss-l">current time per casting</div></div>
+      <div class="ss"><div class="ss-n">10 min</div><div class="ss-l">with ARC</div></div>
+      <div class="ss"><div class="ss-n">₹999</div><div class="ss-l">max actor subscription</div></div>
+      <div class="ss"><div class="ss-n">0</div><div class="ss-l">direct competitors solving this</div></div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════
-     CTA
-══════════════════════════════════════════════ -->
+<!-- ═══ CTA ═══ -->
 <section id="cta">
-  <div class="container" style="position:relative; z-index:2;">
-    <div class="section-label fade-up" style="justify-content:center;">The Ask</div>
-    <h2 class="cta-title fade-up delay-1">Let's build <em style="color:var(--red); font-style:normal;">ARC</em>.</h2>
-    <p class="cta-sub fade-up delay-2">
-      The problem is real. The market is uncontested. We need a technical co-founder who wants to own the infra layer of India's casting industry.
-    </p>
+  <div class="container" style="position:relative;z-index:2">
+    <div class="label fu" style="justify-content:center">The Ask</div>
+    <div class="cta-t fu d1">Let's build <span class="red">ARC</span>.</div>
+    <p class="cta-s fu d2">The problem is real. The market is uncontested. We need a technical co-founder who wants to own the infra layer of India's casting industry.</p>
 
-    <div style="max-width:640px; margin:0 auto 40px; display:grid; grid-template-columns:1fr 1fr; gap:1rem;" class="fade-up delay-3">
-      <div style="padding:20px; background:var(--card); border:1px solid var(--border); border-radius:12px; text-align:left;">
-        <div style="font-family:var(--font-mono); font-size:10px; color:var(--muted); letter-spacing:2px; margin-bottom:8px;">YOU BRING</div>
-        <ul style="list-style:none; font-size:14px; color:var(--muted2);">
-          <li style="padding:4px 0;">→ Full-stack engineering ability</li>
-          <li style="padding:4px 0;">→ System design thinking</li>
-          <li style="padding:4px 0;">→ AI/LLM integration experience</li>
-          <li style="padding:4px 0;">→ Founder mindset & equity stake</li>
+    <div class="cta-cards fu d3">
+      <div class="cc">
+        <div class="cc-lbl">You Bring</div>
+        <ul>
+          <li>Full-stack engineering ability</li>
+          <li>System design thinking</li>
+          <li>AI / LLM integration experience</li>
+          <li>Founder mindset &amp; equity ownership</li>
         </ul>
       </div>
-      <div style="padding:20px; background:rgba(232,69,90,0.07); border:1px solid var(--red-border); border-radius:12px; text-align:left;">
-        <div style="font-family:var(--font-mono); font-size:10px; color:var(--red); letter-spacing:2px; margin-bottom:8px;">WE HAVE</div>
-        <ul style="list-style:none; font-size:14px; color:var(--muted2);">
-          <li style="padding:4px 0;">→ Deep casting industry knowledge</li>
-          <li style="padding:4px 0;">→ Agency relationships & distribution</li>
-          <li style="padding:4px 0;">→ Product vision & business model</li>
-          <li style="padding:4px 0;">→ A problem that costs 4 hrs every day</li>
+      <div class="cc highlight">
+        <div class="cc-lbl">We Have</div>
+        <ul>
+          <li>Deep casting industry knowledge</li>
+          <li>Agency relationships &amp; distribution</li>
+          <li>Product vision &amp; clear business model</li>
+          <li>A problem that costs 4 hrs every day</li>
         </ul>
       </div>
     </div>
 
-    <div class="cta-buttons fade-up delay-4">
-      <a href="mailto:" class="cta-btn-primary">Let's Talk →</a>
-      <a href="#problem" class="cta-btn-ghost">Read Again ↑</a>
+    <div class="cta-btns fu d4">
+      <a href="mailto:" class="btn-primary">Let's Talk →</a>
+      <a href="#problem" class="btn-ghost">Read Again ↑</a>
     </div>
-
-    <p style="margin-top:32px; font-family:var(--font-mono); font-size:11px; color:var(--muted); letter-spacing:2px;" class="fade-up delay-5">
-      CONFIDENTIAL · ARC CASTING INFRASTRUCTURE PLATFORM
-    </p>
+    <p class="cta-fine fu d5">CONFIDENTIAL · ARC CASTING INFRASTRUCTURE PLATFORM · 2025</p>
   </div>
 </section>
 
 <footer>
   <span>ARC — Casting Infrastructure Platform</span>
-  <span style="color:var(--red);">arc.</span>
+  <span>Confidential · For co-founder use only</span>
 </footer>
 
 <script>
-  // Intersection Observer for fade-up animations
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-      }
-    });
-  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+// Mobile menu
+function toggleMenu(){
+  var m=document.getElementById('mm');
+  m.classList.toggle('open');
+}
+function closeMenu(){
+  document.getElementById('mm').classList.remove('open');
+}
 
-  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+// Scroll-triggered fade-ups
+var observer=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if(e.isIntersecting){e.target.classList.add('vis')}
+  });
+},{threshold:0.07,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('.fu').forEach(function(el){observer.observe(el)});
 
-  // Active nav link highlight on scroll
-  const sections = document.querySelectorAll('section[id]');
-  const navLinks = document.querySelectorAll('.nav-links a');
-
-  const navObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        navLinks.forEach(link => link.style.color = '');
-        const active = document.querySelector(`.nav-links a[href="#${entry.target.id}"]`);
-        if (active) active.style.color = 'var(--red)';
-      }
-    });
-  }, { threshold: 0.4 });
-
-  sections.forEach(s => navObserver.observe(s));
+// Nav active state
+var secs=document.querySelectorAll('section[id]');
+var navAs=document.querySelectorAll('.nav-links a');
+var secObserver=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if(e.isIntersecting){
+      navAs.forEach(function(a){a.style.color=''});
+      var act=document.querySelector('.nav-links a[href="#'+e.target.id+'"]');
+      if(act)act.style.color='var(--red)';
+    }
+  });
+},{threshold:0.35});
+secs.forEach(function(s){secObserver.observe(s)});
 </script>
 </body>
 </html>
